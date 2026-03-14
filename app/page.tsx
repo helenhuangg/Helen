@@ -8,7 +8,12 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import ProjectCard from "./components/projectCard";
 import { Magnetic } from "@/components/animate-ui/primitives/effects/magnetic";
-import { Masonry } from "masonic";
+import dynamic from "next/dynamic";
+
+const Masonry = dynamic(
+  () => import("masonic").then((mod) => ({ default: mod.Masonry })),
+  { ssr: false }
+) as unknown as typeof import("masonic").Masonry;
 import Preloader from "./components/preloader";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
