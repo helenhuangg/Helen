@@ -7,6 +7,8 @@ import { ReactNode } from "react";
 import Header from "./components/header";
 import "./globals.css";
 import SmoothScroll from "./components/ScrollSmooth";
+import { PreloaderProvider } from "./components/PreloaderContext";
+import Footer from "./components/footer";
 
 export const metadata: Metadata = {
   title: "Helen Huang",
@@ -64,8 +66,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable}`}
         style={{ margin: 0, height: "100%" }}
+        suppressHydrationWarning
       >
+        <PreloaderProvider>
         <SmoothScroll />
+        <Header />
         <div
           id="smooth-wrapper"
           style={{
@@ -78,10 +83,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         >
           <div id="smooth-content">
-            <Header />
             {children}
+            <Footer />
           </div>
         </div>
+        </PreloaderProvider>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { usePreloader } from "./components/PreloaderContext";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
@@ -37,7 +38,7 @@ const projects = [
     tags: ["motion"],
     image: "/images/spotify1.png",
     hoverImage: "/images/spotify2.png",
-    href: "work/spotify",
+    href: "/work/spotify",
   },
   {
     title: "Bulldog Dispatch",
@@ -45,7 +46,7 @@ const projects = [
     tags: ["motion"],
     image: "/images/bd1.png",
     hoverImage: "/images/bd2.png",
-    href: "work/bulldog-dispatch",
+    href: "/work/bulldog-dispatch",
   },
 ];
 
@@ -80,14 +81,40 @@ function useColumnCount() {
 }
 
 const Home = () => {
-  const [loading, setLoading] = useState(true);
+  const { hasShown, markShown } = usePreloader();
+  const [loading, setLoading] = useState(!hasShown);
   const heroBgRef = useRef<HTMLDivElement>(null);
   const columnCount = useColumnCount();
 
-  useGSAP(() => {
-    gsap.set(heroBgRef.current, { scale: 1.15 });
-
+  useEffect(() => {
     if (loading) return;
+    if (!sessionStorage.getItem("scrollToWork")) return;
+    sessionStorage.removeItem("scrollToWork");
+
+    const { ScrollSmoother } = require("gsap/ScrollSmoother");
+
+    const interval = setInterval(() => {
+      const smoother = ScrollSmoother.get();
+      const el = document.getElementById("work");
+      if (smoother && el) {
+        clearInterval(interval);
+        smoother.scrollTo(el, true);
+      }
+    }, 50);
+
+    const timeout = setTimeout(() => clearInterval(interval), 3000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [loading]);
+
+  useGSAP(() => {
+    if (loading) {
+      gsap.set(heroBgRef.current, { scale: 1.15 });
+      return;
+    }
 
     // scramble in
     gsap.to(".scroll-indicator p", {
@@ -115,7 +142,10 @@ const Home = () => {
       },
     });
 
-    gsap.from(".project-card", {
+    const cards = gsap.utils
+      .toArray<HTMLElement>(".project-card")
+      .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
+    gsap.from(cards, {
       opacity: 0,
       y: 60,
       duration: 0.8,
@@ -186,7 +216,14 @@ const Home = () => {
 
   return (
     <>
-      {loading && <Preloader onComplete={() => setLoading(false)} />}
+      {loading && (
+        <Preloader
+          onComplete={() => {
+            markShown();
+            setLoading(false);
+          }}
+        />
+      )}
       <div
         className={`transition-opacity duration-500 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
       >
@@ -282,9 +319,17 @@ const Home = () => {
             </Magnetic>
 
             {/* scroll indicator */}
-            <div className="scroll-indicator absolute bottom-[3vw] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+            <button
+              className="scroll-indicator absolute bottom-[3vw] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+              onClick={() =>
+                gsap.to(window, {
+                  duration: 1,
+                  scrollTo: { y: "#work", offsetY: 80 },
+                })
+              }
+            >
               <p className="footnote">&nbsp;</p>
-            </div>
+            </button>
           </div>
 
           <div id="work" className="w-full px-[10vw] overflow-hidden">
@@ -293,7 +338,7 @@ const Home = () => {
               columnCount={columnCount}
               columnGutter={24}
               rowGutter={24}
-              render={({ data }) => <ProjectCard {...data} />}
+              render={({ data, index }) => <ProjectCard {...data} index={index} />}
             />
           </div>
         </div>

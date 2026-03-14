@@ -1,5 +1,6 @@
 "use client";
 import { useRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 
 type Project = {
@@ -9,6 +10,7 @@ type Project = {
   image: string;
   hoverImage: string;
   href: string;
+  index?: number;
 };
 
 const ProjectCard = ({
@@ -18,6 +20,7 @@ const ProjectCard = ({
   image,
   hoverImage,
   href,
+  index,
 }: Project) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const defaultImgRef = useRef<HTMLImageElement>(null);
@@ -44,7 +47,7 @@ const ProjectCard = ({
   };
 
   return (
-    <a href={href} className="project-card flex flex-col gap-4 self-stretch">
+    <Link href={href} className="project-card flex flex-col gap-4 self-stretch" data-order={index}>
       <div
         ref={cardRef}
         className="overflow-hidden rounded-lg relative"
@@ -82,7 +85,7 @@ const ProjectCard = ({
         </div>
         <p className="cardDescription">{description}</p>
       </div>
-    </a>
+    </Link>
   );
 };
 
