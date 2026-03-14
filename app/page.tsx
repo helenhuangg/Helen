@@ -1,65 +1,300 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+import React, { useRef, useState, useEffect } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
+import ProjectCard from "./components/projectCard";
+import { Magnetic } from "@/components/animate-ui/primitives/effects/magnetic";
+import { Masonry } from "masonic";
+import Preloader from "./components/preloader";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(SplitText);
+gsap.registerPlugin(ScrambleTextPlugin);
+gsap.registerPlugin(DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger);
+
+const projects = [
+  {
+    title: "YHack",
+    description: "Designing a Hackathon Worth Faling For",
+    tags: ["0 -> 1 Design"],
+    image: "images/yhack1.png",
+    hoverImage: "images/yhack2.png",
+    href: "/work/yhack",
+  },
+  {
+    title: "Spotify",
+    description: "Spotify Motion Brand Commercial",
+    tags: ["motion"],
+    image: "/images/spotify1.png",
+    hoverImage: "/images/spotify2.png",
+    href: "work/spotify",
+  },
+  {
+    title: "Bulldog Dispatch",
+    description: "Motion Brand Identiy and Graphics",
+    tags: ["motion"],
+    image: "/images/bd1.png",
+    hoverImage: "/images/bd2.png",
+    href: "work/bulldog-dispatch",
+  },
+];
+
+const Divider = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1"
+    height="100%"
+    viewBox="0 0 1 12"
+    fill="none"
+    preserveAspectRatio="none"
+  >
+    <path className="divider-line" d="M0.5 0V12" stroke="#778BA4" />
+  </svg>
+);
+
+function useColumnCount() {
+  const [columns, setColumns] = useState(2);
+
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth < 640) setColumns(1);
+      else setColumns(2);
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return columns;
 }
+
+const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const heroBgRef = useRef<HTMLDivElement>(null);
+  const columnCount = useColumnCount();
+
+  useGSAP(() => {
+    gsap.set(heroBgRef.current, { scale: 1.15 });
+
+    if (loading) return;
+
+    // scramble in
+    gsap.to(".scroll-indicator p", {
+      duration: 1,
+      delay: 1,
+      scrambleText: {
+        text: "scroll to view work",
+        chars: "lowerCase",
+        speed: 0.5,
+        revealDelay: 0.2,
+      },
+      ease: "none",
+    });
+
+    // fade out on scroll
+    gsap.to(".scroll-indicator", {
+      opacity: 0,
+      y: -10,
+      duration: 0.3,
+      scrollTrigger: {
+        trigger: ".hero-bg",
+        start: "top top",
+        end: "20% top",
+        scrub: true,
+      },
+    });
+
+    gsap.from(".project-card", {
+      opacity: 0,
+      y: 60,
+      duration: 0.8,
+      ease: "power3.out",
+      stagger: 0.15,
+      scrollTrigger: {
+        trigger: ".project-card",
+        start: "top 90%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    gsap.from(".divider-line", {
+      drawSVG: "50% 50%",
+      duration: 0.5,
+      delay: 0.5,
+      ease: "power2.out",
+    });
+
+    SplitText.create(".larger-title", {
+      type: "words",
+      autoSplit: true,
+      onSplit(self) {
+        return gsap.from(self.words, {
+          opacity: 0,
+          filter: "blur(5px)",
+          y: 20,
+          duration: 0.4,
+          stagger: 0.075,
+          delay: 0,
+          ease: "power2.out",
+        });
+      },
+    });
+
+    SplitText.create(".caption", {
+      type: "lines",
+      autoSplit: true,
+      onSplit(self) {
+        return gsap.from(self.lines, {
+          opacity: 0,
+          filter: "blur(2px)",
+          y: 20,
+          duration: 0.4,
+          stagger: 0.075,
+          delay: 0.2,
+          ease: "power2.out",
+        });
+      },
+    });
+
+    SplitText.create(".footnote", {
+      type: "words",
+      autoSplit: true,
+      onSplit(self) {
+        return gsap.from(self.words, {
+          opacity: 0,
+          filter: "blur(1px)",
+          x: 10,
+          duration: 0.4,
+          stagger: 0.1,
+          delay: 0.5,
+          ease: "power2.out",
+        });
+      },
+    });
+  }, [loading]);
+
+  return (
+    <>
+      {loading && <Preloader onComplete={() => setLoading(false)} />}
+      <div
+        className={`transition-opacity duration-500 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      >
+        <div className="flex flex-col items-center gap-2.5">
+          <div
+            ref={heroBgRef}
+            className="hero-bg relative h-screen w-full flex flex-col justify-center items-center p-[10vw]"
+          >
+            <Magnetic strength={0.1} range={300}>
+              <div className="flex flex-col gap-16 w-fit">
+                <section className="flex flex-col items-start gap-1 self-stretch">
+                  <div className="align-self-stretch">
+                    <h1 className="larger-title">Helen Huang</h1>
+                  </div>
+                  <ul className="flex flex-col gap-0.5">
+                    <li className="flex items-start gap-2">
+                      <span className="number">[一]</span>
+                      <p className="caption">
+                        Currently, I'm studying
+                        <span className="caption-2">
+                          {" "}
+                          Computing and the Arts
+                        </span>{" "}
+                        at
+                        <span className="caption-2"> Yale University*</span>.
+                      </p>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="number">[二]</span>
+                      <p className="caption">
+                        An interdisciplinary designer with a lot of love for
+                        <span className="caption-2"> motion</span>, and
+                        <span className="caption-2"> product design</span>.
+                      </p>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="number">[三]</span>
+                      <p className="caption">
+                        Outside of design, I enjoy
+                        <span className="caption-2">
+                          {" "}
+                          learning new softwares
+                        </span>
+                        , and
+                        <span className="caption-2">
+                          {" "}
+                          getting dimsum with family!
+                        </span>
+                      </p>
+                    </li>
+                  </ul>
+                </section>
+
+                <section className="flex justify-between center stretch">
+                  <div className="flex center gap-3">
+                    <a
+                      href="mailto:helen.huang@example.com"
+                      className="footnote"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      email
+                    </a>
+                    <Divider />
+                    <a
+                      href="https://www.linkedin.com/in/hailuen"
+                      className="footnote"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      linkedin
+                    </a>
+                    <Divider />
+                    <a
+                      href="https://www.github.com/helenhuangg"
+                      className="footnote"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      github
+                    </a>
+                  </div>
+                  <div>
+                    <a
+                      href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
+                      className="footnote"
+                    >
+                      resume :D
+                    </a>
+                  </div>
+                </section>
+              </div>
+            </Magnetic>
+
+            {/* scroll indicator */}
+            <div className="scroll-indicator absolute bottom-[3vw] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+              <p className="footnote">&nbsp;</p>
+            </div>
+          </div>
+
+          <div id="work" className="w-full px-[10vw] overflow-hidden">
+            <Masonry
+              items={projects}
+              columnCount={columnCount}
+              columnGutter={24}
+              rowGutter={24}
+              render={({ data }) => <ProjectCard {...data} />}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Home;
