@@ -60,33 +60,49 @@ const adobeCaslonPro = localFont({
   variable: "--font-Adobe-Caslon-Pro",
 });
 
+const hwCigars = localFont({
+  src: [
+    {
+      path: "./fonts/HW Cigars Trial Regular.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/HW Cigars Trial Medium.woff",
+      weight: "500",
+      style: "normal",
+    },
+  ],
+  variable: "--font-hw-cigars",
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html style={{ height: "100%" }}>
       <body
-        className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable}`}
+        className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable} ${hwCigars.variable}`}
         style={{ margin: 0, height: "100%" }}
         suppressHydrationWarning
       >
         <PreloaderProvider>
-        <SmoothScroll />
-        <Header />
-        <div
-          id="smooth-wrapper"
-          style={{
-            overflow: "hidden",
-            position: "fixed",
-            height: "100%",
-            width: "100%",
-            top: 0,
-            left: 0,
-          }}
-        >
-          <div id="smooth-content">
-            {children}
-            <Footer />
+          <SmoothScroll />
+          <Header />
+          <div
+            id="smooth-wrapper"
+            style={{
+              overflow: "hidden",
+              position: "fixed",
+              height: "100%",
+              width: "100%",
+              top: 0,
+              left: 0,
+            }}
+          >
+            <div id="smooth-content">
+              {children}
+              <Footer />
+            </div>
           </div>
-        </div>
         </PreloaderProvider>
       </body>
     </html>

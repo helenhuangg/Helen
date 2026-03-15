@@ -20,14 +20,17 @@
   }
 
   body {
-    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  p {
+    font-family: var(--font-Alte-Haas-Grotesk);
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
+    line-height: 132%;
     letter-spacing: -0.5px;
     color: var(--color-secondary);
-    -webkit-font-smoothing: antialiased;
   }
 }
 
@@ -51,15 +54,13 @@
 }
 
 .title-2 {
-  font-feature-settings:
-    "dlig" on,
-    "swsh" on;
-  font-family: var(--font-Adobe-Caslon-Pro);
-  font-size: 32px;
-  font-style: italic;
+  font-family: var(--font-hw-cigars);
+  font-size: clamp(2rem, 30.6px + 0.38vw, 2.25rem);
+  font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 0.96;
   letter-spacing: -1.6px;
+  text-align: center;
 }
 
 .callout {
@@ -73,8 +74,8 @@
 }
 
 .headline {
-  font-family: var(--font-eb-garamond);
-  font-size: 32px;
+  font-family: var(--font-hw-cigars);
+  font-size: clamp(1.5625rem, 21.6316px + 0.438597vw, 1.8125rem);
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -83,7 +84,7 @@
 }
 
 .subheadline {
-  font-family: var(--font-eb-garamond);
+  font-family: var(--font-Alte-Haas-Grotesk);
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -191,16 +192,16 @@
 
 .cardTitle {
   color: #323c45;
-  font-family: var(--font-Adobe-Caslon-Pro);
-  font-size: 24px;
-  font-style: italic;
+  font-family: var(--font-hw-cigars);
+  font-size: 20px;
+  font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.48px;
+  line-height: 19.4px;
+  letter-spacing: -0.8px;
 }
 
 .cardDescription {
-  color: #b3bfcb;
+  color: var(--color-secondary);
   font-family: var(--font-Alte-Haas-Grotesk);
   font-size: 16px;
   font-style: normal;

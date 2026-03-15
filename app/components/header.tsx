@@ -61,7 +61,7 @@ const Header = () => {
   }, [pathname]);
 
   return (
-    <header className="fixed w-full flex items-center justify-between px-[10vw] py-[1.5vw] z-100">
+    <header className="fixed w-full flex items-center justify-between px-4 lg:px-[10vw] py-[1.5vw] z-100">
       <Link href="/" className="cursor-pointer">
         <Image src="/clover.svg" alt="Clover Logo" width={38} height={36} />
       </Link>

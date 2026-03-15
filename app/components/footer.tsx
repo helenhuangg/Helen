@@ -28,7 +28,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="flex items-center justify-between px-[10vw] py-[30px] font-[family-name:var(--font-dm-mono)] text-[10px] tracking-[-0.5px]"
+      className="flex items-center justify-between px-4 lg:px-[10vw] py-[30px] font-[family-name:var(--font-dm-mono)] text-[10px] tracking-[-0.5px]"
       style={{
         backgroundColor: "var(--color-primary)",
         color: "var(--color-background)",

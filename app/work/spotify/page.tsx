@@ -1,13 +1,14 @@
 "use client";
 import { useRef } from "react";
 import WorkNav from "@/app/components/WorkNav";
+import WorkHeader from "@/app/components/WorkHeader";
+import WorkSection from "@/app/components/WorkSection";
 import dynamic from "next/dynamic";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(SplitText, ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReactPlayer = dynamic(() => import("react-player"), {
@@ -19,67 +20,7 @@ export default function Spotify() {
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({ delay: 0.1 });
-
-      SplitText.create(".spot-subtitle", {
-        type: "chars",
-        autoSplit: true,
-        onSplit(self) {
-          tl.from(
-            self.chars,
-            {
-              opacity: 0,
-              y: 10,
-              duration: 0.3,
-              stagger: 0.02,
-              ease: "power2.out",
-            },
-            0,
-          );
-        },
-      });
-
-      SplitText.create(".spot-title", {
-        type: "words",
-        autoSplit: true,
-        onSplit(self) {
-          tl.from(
-            self.words,
-            {
-              opacity: 0,
-              filter: "blur(4px)",
-              y: 20,
-              duration: 0.5,
-              stagger: 0.08,
-              ease: "power2.out",
-            },
-            0.2,
-          );
-        },
-      });
-
-      gsap.set(".spot-hero", { clipPath: "inset(100% 0% 0% 0%)" });
-      gsap.set(".spot-hero img", { scale: 1.3 });
-
-      tl.to(
-        ".spot-hero",
-        {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: 0.8,
-          ease: "power4.inOut",
-        },
-        0,
-      ).to(
-        ".spot-hero img",
-        {
-          scale: 1,
-          duration: 1,
-          ease: "power2.out",
-        },
-        0.2,
-      );
-
-      gsap.utils.toArray<HTMLElement>(".spot-section").forEach((section) => {
+      gsap.utils.toArray<HTMLElement>(".work-section").forEach((section) => {
         gsap.from(section, {
           opacity: 0,
           y: 50,
@@ -110,41 +51,14 @@ export default function Spotify() {
         ref={contentRef}
         className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[22vw] lg:pr-[10vw]"
       >
-        {/* title block */}
-        <div className="flex flex-col gap-6 items-center w-full">
-          <div className="flex flex-col gap-0.5 items-center">
-            <p
-              className="spot-subtitle callout"
-              style={{ color: "var(--color-highlight)" }}
-            >
-              FALL 2024
-            </p>
-            <h3
-              className="spot-title title-2"
-              style={{ color: "var(--color-primary)" }}
-            >
-              Spotify Brand Commercial
-            </h3>
-          </div>
+        <WorkHeader
+          subtitle="FALL 2024"
+          title="Spotify Brand Commercial"
+          image="/images/spotify2.png"
+          alt="Spotify"
+        />
 
-          {/* hero image */}
-          <div className="spot-hero w-full rounded-[20px] overflow-hidden aspect-video">
-            <img
-              src="/images/spotify2.png"
-              alt="Spotify"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-
-        {/* context section */}
-        <section
-          id="context"
-          className="spot-section flex flex-col gap-4 items-start py-[10px] w-full"
-        >
-          <h5 className="callout" style={{ color: "var(--color-highlight)" }}>
-            Context
-          </h5>
+        <WorkSection id="context" label="Context">
           <p className="body text-[var(--color-secondary)]">
             This is a personal project of mine made my junior year of high
             school or around Feb 2024 (?). Initially, an experimental project
@@ -158,16 +72,9 @@ export default function Spotify() {
             feedback and this was really the kick start to my motivation to make
             more motion design.
           </p>
-        </section>
+        </WorkSection>
 
-        {/* vimeo video */}
-        <section
-          id="video"
-          className="spot-section flex flex-col items-start py-[10px] w-full gap-6"
-        >
-          <h5 className="callout" style={{ color: "var(--color-highlight)" }}>
-            Video
-          </h5>
+        <WorkSection id="video" label="Video" className="gap-6">
           <div className="w-full aspect-video">
             <div style={{ padding: "56.25% 0 0 0", position: "relative" }}>
               <iframe
@@ -187,18 +94,10 @@ export default function Spotify() {
             </div>
             <script src="https://player.vimeo.com/api/player.js"></script>
           </div>
-        </section>
+        </WorkSection>
 
-        {/* styleframes section */}
-        <section
-          id="styleframes"
-          className="spot-section flex flex-col items-start py-[10px] w-full gap-6"
-        >
-          <h5 className="callout" style={{ color: "var(--color-highlight)" }}>
-            Styleframes
-          </h5>
-
-          <div className="grid grid-cols-2 gap-4 w-full">
+        <WorkSection id="styleframes" label="Styleframes" className="gap-6">
+          <div className="grid grid-cols-1 gap-4 w-full lg:grid-cols-2">
             <video
               src="/videos/spot1.mp4"
               className="w-full h-full object-cover"
@@ -240,7 +139,7 @@ export default function Spotify() {
               playsInline
             />
           </div>
-        </section>
+        </WorkSection>
       </div>
     </div>
   );
