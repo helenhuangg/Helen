@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { Suspense, useRef, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { usePreloader } from "./components/PreloaderContext";
 import { useGSAP } from "@gsap/react";
@@ -405,4 +405,10 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <Home />
+    </Suspense>
+  );
+}

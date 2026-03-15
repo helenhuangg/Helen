@@ -4,7 +4,7 @@ import { DM_Mono } from "next/font/google";
 import { EB_Garamond } from "next/font/google";
 import { Zhi_Mang_Xing } from "next/font/google";
 import { Imperial_Script } from "next/font/google";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import Header from "./components/header";
 import "./globals.css";
 import SmoothScroll from "./components/ScrollSmooth";
@@ -95,7 +95,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         suppressHydrationWarning
       >
         <PreloaderProvider>
-          <SmoothScroll />
+          <Suspense fallback={null}>
+            <SmoothScroll />
+          </Suspense>
           <Header />
           <div
             id="smooth-wrapper"
