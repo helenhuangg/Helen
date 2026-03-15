@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { DM_Mono } from "next/font/google";
 import { EB_Garamond } from "next/font/google";
 import { Zhi_Mang_Xing } from "next/font/google";
+import { Imperial_Script } from "next/font/google";
 import { ReactNode } from "react";
 import Header from "./components/header";
 import "./globals.css";
@@ -13,6 +14,9 @@ import Footer from "./components/footer";
 export const metadata: Metadata = {
   title: "Helen Huang",
   description: "Helen Huang's Portfolio",
+  icons: {
+    icon: "/clover.svg",
+  },
 };
 
 const ebGaramond = EB_Garamond({
@@ -20,6 +24,12 @@ const ebGaramond = EB_Garamond({
   style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-eb-garamond",
+});
+
+const imperialScript = Imperial_Script({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-imperial-script",
 });
 
 const dmMono = DM_Mono({
@@ -80,7 +90,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html style={{ height: "100%" }}>
       <body
-        className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable} ${hwCigars.variable}`}
+        className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable} ${hwCigars.variable} ${imperialScript.variable}`}
         style={{ margin: 0, height: "100%" }}
         suppressHydrationWarning
       >

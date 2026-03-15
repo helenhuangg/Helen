@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { usePreloader } from "./components/PreloaderContext";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -34,7 +35,7 @@ const projects = [
   },
   {
     title: "Spotify",
-    description: "Spotify Motion Brand Commercial",
+    description: "Brand Commercial",
     tags: ["motion"],
     image: "/images/spotify1.png",
     hoverImage: "/images/spotify2.png",
@@ -42,7 +43,7 @@ const projects = [
   },
   {
     title: "Bulldog Dispatch",
-    description: "Motion Brand Identiy and Graphics",
+    description: "Motion Brand Identity and Graphics",
     tags: ["motion"],
     image: "/images/bd1.png",
     hoverImage: "/images/bd2.png",
@@ -85,30 +86,59 @@ const Home = () => {
   const [loading, setLoading] = useState(!hasShown);
   const heroBgRef = useRef<HTMLDivElement>(null);
   const columnCount = useColumnCount();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     if (loading) return;
-    if (!sessionStorage.getItem("scrollToWork")) return;
+
+    const sectionId =
+      searchParams.get("scrollTo") ||
+      sessionStorage.getItem("scrollToSection") ||
+      (sessionStorage.getItem("scrollToWork") ? "work" : null);
+    if (!sectionId) return;
+
+    sessionStorage.removeItem("scrollToSection");
     sessionStorage.removeItem("scrollToWork");
 
     const { ScrollSmoother } = require("gsap/ScrollSmoother");
 
-    const interval = setInterval(() => {
+    const scrollToEl = () => {
       const smoother = ScrollSmoother.get();
-      const el = document.getElementById("work");
-      if (smoother && el) {
-        clearInterval(interval);
-        smoother.scrollTo(el, true);
+      const el = document.getElementById(sectionId);
+      if (el) {
+        if (smoother) {
+          smoother.scrollTo(el, false);
+        } else {
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: { y: `#${sectionId}`, offsetY: 80 },
+          });
+        }
+        if (searchParams.get("scrollTo")) {
+          router.replace("/");
+        }
+        return true;
       }
-    }, 50);
+      return false;
+    };
 
-    const timeout = setTimeout(() => clearInterval(interval), 3000);
+    let interval: ReturnType<typeof setInterval> | null = null;
+    const timeout = setTimeout(() => {
+      if (!scrollToEl()) {
+        interval = setInterval(() => {
+          if (scrollToEl() && interval) {
+            clearInterval(interval);
+          }
+        }, 50);
+      }
+    }, 200);
 
     return () => {
-      clearInterval(interval);
       clearTimeout(timeout);
+      if (interval) clearInterval(interval);
     };
-  }, [loading]);
+  }, [loading, searchParams, router]);
 
   useGSAP(() => {
     if (loading) {
@@ -355,7 +385,7 @@ const Home = () => {
             </button>
           </div>
 
-          <div
+          <section
             id="work"
             className="w-full px-4 lg:px-[10vw] py-4 overflow-hidden"
           >
@@ -368,7 +398,7 @@ const Home = () => {
                 <ProjectCard {...data} index={index} />
               )}
             />
-          </div>
+          </section>
         </div>
       </div>
     </>

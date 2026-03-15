@@ -101,6 +101,49 @@
   letter-spacing: -0.8px;
 }
 
+.narrative-1 {
+  font-family: var(--font-hw-cigars);
+  font-size: clamp(2rem, 18.5263px + 1.75439vw, 3rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.05em;
+  color: var(--color-secondary);
+}
+
+.drop-cap::first-letter {
+  font-family: var(--font-imperial-script);
+  font-size: clamp(4rem, 36px + 3.5vw, 6rem);
+  font-style: normal;
+  font-weight: 400;
+  float: left;
+  line-height: 1;
+  margin-right: 0.06em;
+  margin-top: -0.22em;
+  color: var(--color-primary);
+}
+
+/* Span-based drop cap (Shopify Editions style) - use when ::first-letter doesn't work */
+.drop-cap-inline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.drop-cap-letter {
+  font-family: var(--font-imperial-script);
+  font-size: clamp(4rem, 36px + 3.5vw, 6rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0.9;
+  margin-right: 0.08em;
+  color: var(--color-primary);
+}
+
+.drop-cap-aligned::first-letter {
+  margin-top: 0.06em;
+}
+
 .number {
   color: var(--color-primary);
   font-family: var(--font-zhi-mang-xing);

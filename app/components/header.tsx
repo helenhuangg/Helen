@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useRef, useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import React from "react";
 import Link from "next/link";
@@ -13,6 +13,30 @@ gsap.registerPlugin(ScrollToPlugin);
 const Header = () => {
   const showAnimRef = useRef<gsap.core.Tween | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const scrollToSection = useCallback(
+    (sectionId: string) => {
+      if (pathname === "/") {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const { ScrollSmoother } = require("gsap/ScrollSmoother");
+          const smoother = ScrollSmoother.get();
+          if (smoother) {
+            smoother.scrollTo(el, false);
+          } else {
+            gsap.to(window, {
+              duration: 1,
+              scrollTo: { y: `#${sectionId}`, offsetY: 80 },
+            });
+          }
+        }
+      } else {
+        router.push("/?scrollTo=" + sectionId);
+      }
+    },
+    [pathname, router],
+  );
 
   useEffect(() => {
     const showAnim = gsap
@@ -67,39 +91,15 @@ const Header = () => {
       </Link>
 
       <nav className="flex items-center gap-6">
-        <button
-          className="nav-link"
-          onClick={() =>
-            gsap.to(window, {
-              duration: 1,
-              scrollTo: { y: "#work", offsetY: 80 },
-            })
-          }
-        >
+        <button className="nav-link" onClick={() => scrollToSection("work")}>
           Work
         </button>
-        <button
-          className="nav-link"
-          onClick={() =>
-            gsap.to(window, {
-              duration: 1,
-              scrollTo: { y: "#fun", offsetY: 80 },
-            })
-          }
-        >
+        <Link href="/fun" className="nav-link">
           Fun
-        </button>
-        <button
-          className="nav-link"
-          onClick={() =>
-            gsap.to(window, {
-              duration: 1,
-              scrollTo: { y: "#about", offsetY: 80 },
-            })
-          }
-        >
+        </Link>
+        <Link href="/about" className="nav-link">
           About
-        </button>
+        </Link>
       </nav>
     </header>
   );
