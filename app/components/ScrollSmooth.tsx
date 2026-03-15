@@ -13,10 +13,7 @@ export default function SmoothScroll() {
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 1023px)").matches;
-    if (isMobile) {
-      ScrollTrigger.config({ scroller: "#smooth-wrapper" });
-      return () => ScrollTrigger.config({ scroller: window });
-    }
+    if (isMobile) return;
 
     const smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
