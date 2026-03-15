@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense, useRef, useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { usePreloader } from "./components/PreloaderContext";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -88,6 +88,12 @@ const Home = () => {
   const columnCount = useColumnCount();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const hasLeftHome = useRef(false);
+
+  useEffect(() => {
+    if (pathname !== "/") hasLeftHome.current = true;
+  }, [pathname]);
 
   useEffect(() => {
     if (loading) return;
@@ -110,13 +116,17 @@ const Home = () => {
         if (smoother) {
           smoother.scrollTo(el, false);
         } else {
-          gsap.to(window, {
-            duration: 1,
-            scrollTo: { y: `#${sectionId}`, offsetY: 80 },
-          });
+          const wrapper = document.getElementById("smooth-wrapper");
+          if (wrapper) {
+            const y = el.getBoundingClientRect().top + wrapper.scrollTop - 80;
+            wrapper.scrollTo({ top: y, behavior: "smooth" });
+          } else {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         }
         if (searchParams.get("scrollTo")) {
-          router.replace("/");
+          // Use history.replaceState to avoid scroll-to-top (router.replace resets smooth-wrapper)
+          setTimeout(() => window.history.replaceState(null, "", "/"), 1200);
         }
         return true;
       }
@@ -146,54 +156,77 @@ const Home = () => {
       return;
     }
 
-    // scramble in
-    gsap.to(".scroll-indicator p", {
-      duration: 1,
-      delay: 1,
-      scrambleText: {
-        text: "scroll to view work",
-        chars: "lowerCase",
-        speed: 0.5,
-        revealDelay: 0.2,
-      },
-      ease: "none",
-    });
+    // On mobile when returning, skip hero animations (SplitText, scramble)
+    const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
+    const skipHeroAnimations = isMobile && hasLeftHome.current;
 
-    // fade out on scroll
-    gsap.to(".scroll-indicator", {
-      opacity: 0,
-      y: -10,
-      duration: 0.3,
-      scrollTrigger: {
-        trigger: ".hero-bg",
-        start: "top top",
-        end: "20% top",
-        scrub: true,
-      },
-    });
+    if (!skipHeroAnimations) {
+      // scramble in
+      gsap.to(".scroll-indicator p", {
+        duration: 1,
+        delay: 1,
+        scrambleText: {
+          text: "scroll to view work",
+          chars: "lowerCase",
+          speed: 0.5,
+          revealDelay: 0.2,
+        },
+        ease: "none",
+      });
+
+      // fade out on scroll
+      gsap.to(".scroll-indicator", {
+        opacity: 0,
+        y: -10,
+        duration: 0.3,
+        scrollTrigger: {
+          trigger: ".hero-bg",
+          start: "top top",
+          end: "20% top",
+          scrub: true,
+        },
+      });
+    }
 
     const cards = gsap.utils
       .toArray<HTMLElement>(".project-card")
       .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
-    gsap.from(cards, {
-      opacity: 0,
-      y: 60,
-      duration: 0.8,
-      ease: "power3.out",
-      stagger: 0.15,
-      scrollTrigger: {
-        trigger: ".project-card",
-        start: "top 90%",
-        toggleActions: "play none none none",
-      },
-    });
 
-    gsap.from(".divider-line", {
-      drawSVG: "50% 50%",
-      duration: 0.5,
-      delay: 0.5,
-      ease: "power2.out",
-    });
+    // On mobile: always show cards immediately (ScrollTrigger unreliable with smooth-wrapper)
+    if (isMobile) {
+      const showCards = () => {
+        gsap.set(".project-card", { opacity: 1, y: 0 });
+        gsap.set(".divider-line", { drawSVG: "0% 100%" });
+      };
+      const check = (attempts = 0) => {
+        const els = document.querySelectorAll(".project-card");
+        if (els.length > 0 || attempts > 40) showCards();
+        else setTimeout(() => check(attempts + 1), 50);
+      };
+      check();
+    } else {
+      gsap.from(cards, {
+        opacity: 0,
+        y: 60,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: ".project-card",
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
+      });
+
+      gsap.from(".divider-line", {
+        drawSVG: "50% 50%",
+        duration: 0.5,
+        delay: 0.5,
+        ease: "power2.out",
+      });
+    }
+
+    if (skipHeroAnimations) return;
 
     SplitText.create(".larger-title", {
       type: "words",
@@ -374,12 +407,32 @@ const Home = () => {
             {/* scroll indicator */}
             <button
               className="scroll-indicator absolute bottom-[3vw] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
-              onClick={() =>
-                gsap.to(window, {
-                  duration: 1,
-                  scrollTo: { y: "#work", offsetY: 80 },
-                })
-              }
+              onClick={() => {
+                const el = document.getElementById("work");
+                const smoother = (() => {
+                  try {
+                    return require("gsap/ScrollSmoother").ScrollSmoother.get();
+                  } catch {
+                    return null;
+                  }
+                })();
+                if (el) {
+                  if (smoother) {
+                    smoother.scrollTo(el, false);
+                  } else {
+                    const wrapper = document.getElementById("smooth-wrapper");
+                    if (wrapper) {
+                      const y =
+                        el.getBoundingClientRect().top +
+                        wrapper.scrollTop -
+                        80;
+                      wrapper.scrollTo({ top: y, behavior: "smooth" });
+                    } else {
+                      el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                  }
+                }
+              }}
             >
               <p className="footnote">&nbsp;</p>
             </button>

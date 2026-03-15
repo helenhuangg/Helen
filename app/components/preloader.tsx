@@ -72,6 +72,10 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     <div
       ref={loaderRef}
       className="fixed inset-0 z-9999 flex items-center justify-center bg-(--color-primary)"
+      style={{
+        minHeight: "max(100dvh, 100vh)",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
+      }}
     >
       <div className="relative flex items-center justify-center">
         <svg

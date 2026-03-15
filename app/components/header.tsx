@@ -25,10 +25,13 @@ const Header = () => {
           if (smoother) {
             smoother.scrollTo(el, false);
           } else {
-            gsap.to(window, {
-              duration: 1,
-              scrollTo: { y: `#${sectionId}`, offsetY: 80 },
-            });
+            const wrapper = document.getElementById("smooth-wrapper");
+            if (wrapper) {
+              const y = el.getBoundingClientRect().top + wrapper.scrollTop - 80;
+              wrapper.scrollTo({ top: y, behavior: "smooth" });
+            } else {
+              el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
           }
         }
       } else {
@@ -39,6 +42,13 @@ const Header = () => {
   );
 
   useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+    if (isMobile) {
+      // On mobile: keep header always visible (scroll hide/show is unreliable with smooth-wrapper)
+      gsap.set("header", { yPercent: 0 });
+      return;
+    }
+
     const showAnim = gsap
       .from("header", {
         yPercent: -100,
@@ -62,7 +72,7 @@ const Header = () => {
     const onTouchMove = (e: TouchEvent) => {
       const delta = e.touches[0].clientY - touchStartY;
       if (Math.abs(delta) < 10) return;
-      delta > 0 ? showAnim.play() : showAnim.reverse();
+      delta > 0 ? showAnim.reverse() : showAnim.play();
       touchStartY = e.touches[0].clientY;
     };
 

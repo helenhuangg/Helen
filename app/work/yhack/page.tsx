@@ -15,19 +15,26 @@ export default function YHack() {
 
   useGSAP(
     () => {
-      gsap.utils.toArray<HTMLElement>(".work-section").forEach((section) => {
-        gsap.from(section, {
-          opacity: 0,
-          y: 50,
-          duration: 0.7,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
+      const sections = gsap.utils.toArray<HTMLElement>(".work-section");
+      const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+
+      if (isMobile) {
+        gsap.set(sections, { opacity: 1, y: 0 });
+      } else {
+        sections.forEach((section) => {
+          gsap.from(section, {
+            opacity: 0,
+            y: 50,
+            duration: 0.7,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          });
         });
-      });
+      }
     },
     { scope: contentRef },
   );

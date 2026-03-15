@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+/* Mobile: smooth-wrapper must scroll when ScrollSmoother is disabled */
+@media (max-width: 1023px) {
+  #smooth-wrapper {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Scroll target offset for fixed header */
+#work {
+  scroll-margin-top: 80px;
+}
+
 :root {
   --color-primary: #323c45;
   --color-secondary: #6b757f;
@@ -111,16 +125,38 @@
   color: var(--color-secondary);
 }
 
+/* Mobile-first: drop cap base styles */
 .drop-cap::first-letter {
   font-family: var(--font-imperial-script);
-  font-size: clamp(4rem, 36px + 3.5vw, 6rem);
+  font-size: clamp(3.5rem, 14vw, 4.5rem);
   font-style: normal;
   font-weight: 400;
   float: left;
-  line-height: 1;
-  margin-right: 0.06em;
-  margin-top: -0.22em;
+  line-height: 0.95;
+  margin-right: 0.08em;
+  margin-top: -0.14em;
   color: var(--color-primary);
+}
+
+/* On mobile, span clears float so second line aligns to left edge */
+.drop-cap-clear-mobile {
+  display: inline;
+}
+
+@media (max-width: 1023px) {
+  .drop-cap-clear-mobile {
+    display: block;
+    clear: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  .drop-cap::first-letter {
+    font-size: clamp(4rem, 36px + 3.5vw, 6rem);
+    margin-right: 0.06em;
+    margin-top: -0.22em;
+    line-height: 1;
+  }
 }
 
 /* Span-based drop cap (Shopify Editions style) - use when ::first-letter doesn't work */

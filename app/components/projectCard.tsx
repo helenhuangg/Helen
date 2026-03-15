@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 
@@ -25,8 +25,22 @@ const ProjectCard = ({
   const cardRef = useRef<HTMLDivElement>(null);
   const defaultImgRef = useRef<HTMLImageElement>(null);
   const hoverImgRef = useRef<HTMLImageElement>(null);
+  const [isMobile, setIsMobile] = useState(true); // Default mobile to avoid loading hover image
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(max-width: 1023px)").matches);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      gsap.set(cardRef.current, { scale: 1 });
+      gsap.set(defaultImgRef.current, { opacity: 1 });
+      gsap.set(hoverImgRef.current, { opacity: 0 });
+    }
+  }, [isMobile]);
 
   const handleMouseEnter = () => {
+    if (isMobile) return;
     gsap.to(cardRef.current, {
       scale: 0.97,
       duration: 0.4,
@@ -37,6 +51,7 @@ const ProjectCard = ({
   };
 
   const handleMouseLeave = () => {
+    if (isMobile) return;
     gsap.to(cardRef.current, {
       scale: 1,
       duration: 0.4,
@@ -60,12 +75,14 @@ const ProjectCard = ({
           alt={title}
           className="w-full object-cover"
         />
-        <img
-          ref={hoverImgRef}
-          src={hoverImage}
-          alt={`${title} hover`}
-          className="w-full object-cover absolute inset-0 opacity-0"
-        />
+        {!isMobile && (
+          <img
+            ref={hoverImgRef}
+            src={hoverImage}
+            alt={`${title} hover`}
+            className="w-full object-cover absolute inset-0 opacity-0"
+          />
+        )}
       </div>
 
       <div className="flex flex-col items-start self-stretch">

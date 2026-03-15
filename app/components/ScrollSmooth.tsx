@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -10,11 +10,13 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 export default function SmoothScroll() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 1023px)").matches;
-    if (isMobile) return;
+    if (isMobile) {
+      ScrollTrigger.config({ scroller: "#smooth-wrapper" });
+      return () => ScrollTrigger.config({ scroller: window });
+    }
 
     const smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
@@ -28,14 +30,12 @@ export default function SmoothScroll() {
   }, []);
 
   useEffect(() => {
-    if (pathname === "/" && searchParams.get("scrollTo")) {
-      return;
-    }
+    if (pathname === "/") return;
     const smoother = ScrollSmoother.get();
     if (smoother) {
       smoother.scrollTo(0, false);
     }
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }
