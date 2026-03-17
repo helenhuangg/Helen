@@ -26,7 +26,7 @@ export default function WorkInfoBar({ items }: WorkInfoBarProps) {
             {item.label}
           </span>
           <p
-            className="text-[14px] tracking-[-0.7px] whitespace-pre-line"
+            className="!text-[14px] tracking-[-0.7px] whitespace-pre-line"
             style={{
               fontFamily: "var(--font-Alte-Haas-Grotesk)",
               color: "var(--color-primary)",

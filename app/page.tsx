@@ -6,8 +6,6 @@ import { usePreloader } from "./components/PreloaderContext";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import ProjectCard from "./components/projectCard";
 import { Magnetic } from "@/components/animate-ui/primitives/effects/magnetic";
 import dynamic from "next/dynamic";
@@ -20,15 +18,13 @@ import Preloader from "./components/preloader";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(SplitText);
-gsap.registerPlugin(ScrambleTextPlugin);
-gsap.registerPlugin(DrawSVGPlugin);
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   {
     title: "YHack",
-    description: "Designing a Hackathon Worth Faling For",
-    tags: ["0 -> 1 Design"],
+    description: "Designing a Hackathon Worth Falling For",
+    tags: ["Product"],
     image: "images/yhack1.png",
     hoverImage: "images/yhack2.png",
     href: "/work/yhack",
@@ -49,20 +45,15 @@ const projects = [
     hoverImage: "/images/bd2.png",
     href: "/work/bulldog-dispatch",
   },
+  {
+    title: "Libra",
+    description: "FigBuild 2026",
+    tags: ["Product"],
+    image: "/images/libra1.png",
+    hoverImage: "/images/libra2.png",
+    href: "/work/libra",
+  },
 ];
-
-const Divider = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="1"
-    height="100%"
-    viewBox="0 0 1 12"
-    fill="none"
-    preserveAspectRatio="none"
-  >
-    <path className="divider-line" d="M0.5 0V12" stroke="#778BA4" />
-  </svg>
-);
 
 function useColumnCount() {
   const [columns, setColumns] = useState(2);
@@ -157,92 +148,64 @@ const Home = () => {
     }
 
     // On mobile when returning, skip hero animations (SplitText, scramble)
-    const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches;
+    const isMobile =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 1023px)").matches;
     const skipHeroAnimations = isMobile && hasLeftHome.current;
-
-    if (!skipHeroAnimations) {
-      // scramble in
-      gsap.to(".scroll-indicator p", {
-        duration: 1,
-        delay: 1,
-        scrambleText: {
-          text: "scroll to view work",
-          chars: "lowerCase",
-          speed: 0.5,
-          revealDelay: 0.2,
-        },
-        ease: "none",
-      });
-
-      // fade out on scroll
-      gsap.to(".scroll-indicator", {
-        opacity: 0,
-        y: -10,
-        duration: 0.3,
-        scrollTrigger: {
-          trigger: ".hero-bg",
-          start: "top top",
-          end: "20% top",
-          scrub: true,
-        },
-      });
-    }
 
     const cards = gsap.utils
       .toArray<HTMLElement>(".project-card")
       .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
 
-    // On mobile: always show cards immediately (ScrollTrigger unreliable with smooth-wrapper)
-    if (isMobile) {
-      const showCards = () => {
-        gsap.set(".project-card", { opacity: 1, y: 0 });
-        gsap.set(".divider-line", { drawSVG: "0% 100%" });
-      };
-      const check = (attempts = 0) => {
-        const els = document.querySelectorAll(".project-card");
-        if (els.length > 0 || attempts > 40) showCards();
-        else setTimeout(() => check(attempts + 1), 50);
-      };
-      check();
-    } else {
-      gsap.from(cards, {
+    // Animate work cards (same on mobile and desktop)
+    const heroDuration = 1.2;
+    const animateCards = (els: HTMLElement[]) => {
+      if (els.length === 0) return;
+      gsap.from(els, {
         opacity: 0,
         y: 60,
         duration: 0.8,
         ease: "power3.out",
         stagger: 0.15,
-        scrollTrigger: {
-          trigger: ".project-card",
-          start: "top 90%",
-          toggleActions: "play none none none",
-        },
+        delay: heroDuration,
       });
+    };
 
-      gsap.from(".divider-line", {
-        drawSVG: "50% 50%",
-        duration: 0.5,
-        delay: 0.5,
-        ease: "power2.out",
-      });
+    if (isMobile) {
+      // On mobile, cards may render later (Masonry); poll until they exist
+      const check = (attempts = 0) => {
+        const els = document.querySelectorAll<HTMLElement>(".project-card");
+        const sorted = gsap.utils
+          .toArray<HTMLElement>(els)
+          .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
+        if (sorted.length > 0 || attempts > 40) animateCards(sorted);
+        else setTimeout(() => check(attempts + 1), 50);
+      };
+      check();
+    } else {
+      animateCards(cards);
     }
 
-    if (skipHeroAnimations) return;
-
-    SplitText.create(".larger-title", {
-      type: "words",
-      autoSplit: true,
-      onSplit(self) {
-        return gsap.from(self.words, {
-          opacity: 0,
-          filter: "blur(5px)",
-          y: 20,
-          duration: 0.4,
-          stagger: 0.075,
-          delay: 0,
-          ease: "power2.out",
-        });
-      },
+    // Helen Huang vector: always fade in when landing on home (including from nav)
+    gsap.from(".larger-title", {
+      opacity: 0,
+      filter: "blur(8px)",
+      y: 20,
+      duration: 0.7,
+      ease: "power2.out",
     });
+
+    // Divider: fade in right before work section
+    gsap.from(".hero-divider", {
+      opacity: 0,
+      filter: "blur(4px)",
+      y: 12,
+      duration: 0.5,
+      delay: 0.9,
+      ease: "power2.out",
+    });
+
+    if (skipHeroAnimations) return;
 
     SplitText.create(".caption", {
       type: "lines",
@@ -290,13 +253,13 @@ const Home = () => {
       <div
         className={`transition-opacity duration-500 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
       >
-        <div className="flex flex-col items-center gap-2.5">
+        <div className="flex flex-col items-start gap-0 w-full">
           <div
             ref={heroBgRef}
-            className="hero-bg relative h-screen w-full flex flex-col justify-center items-center p-4 lg:p-[10vw]"
+            className="hero-bg relative w-full flex flex-col justify-start items-start gap-8 px-0 pt-24 pb-0"
           >
             <Magnetic strength={0.1} range={300}>
-              <div className="flex flex-col gap-16 w-fit">
+              <div className="flex flex-col gap-16 w-full px-4 lg:px-[6vw]">
                 <section className="flex flex-col items-start gap-1 self-stretch">
                   <div className="align-self-stretch">
                     <svg
@@ -324,11 +287,10 @@ const Home = () => {
                       />
                     </svg>
                   </div>
-                  <ul className="flex flex-col gap-0.5">
+                  <ul className="flex flex-col gap-0">
                     <li className="flex items-start gap-2">
-                      <span className="number">[一]</span>
                       <p className="caption">
-                        Currently, I'm studying
+                        Currently studying
                         <span className="caption-2">
                           {" "}
                           Computing and the Arts
@@ -338,115 +300,103 @@ const Home = () => {
                       </p>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="number">[二]</span>
                       <p className="caption">
                         An interdisciplinary designer with a lot of love for
-                        <span className="caption-2"> motion</span>, and
-                        <span className="caption-2"> product design</span>.
-                      </p>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="number">[三]</span>
-                      <p className="caption">
-                        Outside of design, I enjoy
                         <span className="caption-2">
                           {" "}
-                          learning new softwares
-                        </span>
-                        , and
-                        <span className="caption-2">
-                          {" "}
-                          getting dimsum with family!
+                          motion, product, and design engineering.
                         </span>
                       </p>
                     </li>
                   </ul>
                 </section>
-
-                <section className="flex justify-between center stretch">
-                  <div className="flex center gap-3">
-                    <a
-                      href="mailto:helen.huang@example.com"
-                      className="footnote"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      email
-                    </a>
-                    <Divider />
-                    <a
-                      href="https://www.linkedin.com/in/hailuen"
-                      className="footnote"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      linkedin
-                    </a>
-                    <Divider />
-                    <a
-                      href="https://www.github.com/helenhuangg"
-                      className="footnote"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      github
-                    </a>
-                  </div>
-                  <div>
-                    <a
-                      href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
-                      className="footnote"
-                    >
-                      resume :D
-                    </a>
-                  </div>
-                </section>
               </div>
             </Magnetic>
 
-            {/* scroll indicator */}
-            <button
-              className="scroll-indicator absolute bottom-[3vw] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
-              onClick={() => {
-                const el = document.getElementById("work");
-                const smoother = (() => {
-                  try {
-                    return require("gsap/ScrollSmoother").ScrollSmoother.get();
-                  } catch {
-                    return null;
-                  }
-                })();
-                if (el) {
-                  if (smoother) {
-                    smoother.scrollTo(el, false);
-                  } else {
-                    const wrapper = document.getElementById("smooth-wrapper");
-                    if (wrapper) {
-                      const y =
-                        el.getBoundingClientRect().top +
-                        wrapper.scrollTop -
-                        80;
-                      wrapper.scrollTo({ top: y, behavior: "smooth" });
-                    } else {
-                      el.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }
-                  }
-                }
-              }}
+            <section className="w-full flex justify-between items-center px-4 lg:px-[6vw]">
+              <div className="flex items-center gap-3">
+                <a
+                  href="mailto:helen.huang@example.com"
+                  className="footnote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  email
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/hailuen"
+                  className="footnote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  linkedin
+                </a>
+                <a
+                  href="https://www.github.com/helenhuangg"
+                  className="footnote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  github
+                </a>
+              </div>
+              <div>
+                <a
+                  href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
+                  className="footnote"
+                >
+                  resume :D
+                </a>
+              </div>
+            </section>
+          </div>
+
+          <div className="hero-divider w-full px-4 lg:px-[6vw] py-8 flex justify-center">
+            <svg
+              className="w-full max-w-[100px] h-auto"
+              viewBox="0 0 497 160"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <p className="footnote">&nbsp;</p>
-            </button>
+              <g clipPath="url(#clip0_divider)">
+                <path
+                  d="M255.62 156.66C251.77 161.17 241.3 159.22 241.96 151.57C243.13 137.98 264.07 146.75 255.62 156.66Z"
+                  fill="var(--color-primary)"
+                />
+                <path
+                  d="M361.93 88.96C372.97 114.04 405.06 115.69 427.29 105.81C442.42 99.09 473 77.48 489.65 83.73C498.4 87.01 499.85 98.41 490.37 99.89C479.96 101.51 466.02 97.07 454.66 99.18C447.35 100.54 437.57 108.16 430.62 111.14C425.85 113.19 420.79 113.4 416.41 115.94C415.09 117.9 421.64 119.59 422.89 120.48C425.38 122.26 433.27 129.17 434.92 131.45C437.95 135.61 440.67 144.48 439.98 149.5C438.81 157.98 423.41 163.13 419.07 153.23C420.02 141.98 431.41 147.46 426.72 134.65C424.05 127.36 416.65 124.05 409.93 121.44C399.25 117.29 387.24 116.7 376.67 111.7C374.7 110.77 370.17 105.37 370 110.32C369.96 111.63 371.06 113.44 370.98 115.39C370.57 124.89 365.19 132.7 358.43 138.93C351.05 145.73 341.61 150.68 332.89 142.48C324.94 135.01 331.11 128.52 339.38 125.88C351.34 122.07 366.43 126.42 365.79 108.38C365.61 103.33 353.6 89.86 351.63 84.23C333.19 72.09 299.43 67.41 281.47 81.96C268.23 92.68 265.25 102.61 266.89 119.48C268.13 132.24 286.74 141.01 297.8 133.8C299.38 125.54 286.86 127.94 285.13 121.22C284.19 109.79 304.93 118.65 305.99 126.37C309.15 149.32 279.02 144.61 268.43 131.94C252.13 112.43 265.34 81.76 286.25 71.74C303.21 63.61 335.92 68.95 352.91 76.47C372.46 85.13 393.26 101.31 416.64 92.13C438.29 83.64 414.09 77.06 414.86 64.42C415.27 57.71 425.17 57.78 429.96 61.41C440.86 69.65 435.88 86.57 426.44 93.93C416.14 101.96 400.08 100.98 387.69 98.67C378.49 96.96 370.98 91.28 361.93 88.94V88.96Z"
+                  fill="var(--color-primary)"
+                />
+                <path
+                  d="M199.06 133.82C199.45 134.45 207 136.73 208.41 136.75C214.89 136.82 227.03 129.9 229.38 123.9C230.88 120.05 230.54 104.11 229.45 99.91C226.91 90.09 210.04 76.37 200.19 74.17C187.29 71.29 154.75 74.47 145.27 84.28C139.77 89.97 136.83 99.97 131.44 105.99C128.89 127.48 145.6 121.59 158.89 126.46C177.49 133.28 161.49 152.96 145.21 144.14C136.6 139.48 126.46 126.3 125.97 116.3C125.88 114.46 128.53 107.04 125.44 107.95C123.3 109.11 121.72 110.97 119.47 111.99C106.23 118 79.4504 119.3 71.5104 132.03C69.9604 134.51 67.8004 140.36 69.4104 142.96C70.1104 144.09 73.5703 144.83 75.3803 146.98C83.1103 156.16 67.3903 164.4 59.3803 153.99C54.9303 148.2 58.0003 136.93 61.9303 131.45C62.9403 130.04 69.7904 123.37 71.2304 122.26C72.5804 121.22 82.9503 117.22 80.9203 114.95C75.3903 114.29 69.9804 112.76 64.9404 110.43C58.6704 107.52 48.9903 100.42 42.1903 99.18C30.8103 97.09 16.1803 102.09 5.63035 99.74C-0.379652 98.4 -1.79965 91.39 2.42035 86.95C9.95035 79.05 25.6903 84.34 34.6103 87.76C50.3503 93.79 70.2103 109.71 86.3803 110.99C106.53 112.58 127.2 108.97 134.91 87.96C132.52 87.8 131.67 90.18 129.63 91.17C108.45 101.42 63.2503 109.48 60.1403 75.23C59.3703 66.71 66.9704 57.32 76.1804 59.18C83.3304 60.63 82.8003 65.14 80.3103 70.85C76.6203 79.31 62.8303 82.71 77.5903 90.78C103.98 105.19 131.53 79 154.71 72.25C170.04 67.79 196.83 65.1 211.31 72.06C233.2 82.59 245.64 117.71 224.93 135.46C218.77 140.74 203.7 145.02 196.57 140.8C191 137.5 188.61 129.1 191.88 123.41C194.31 119.18 208.25 112.21 211.2 118.21C215.38 126.16 195.15 127.44 199.06 133.83V133.82Z"
+                  fill="var(--color-primary)"
+                />
+                <path
+                  d="M238.541 53.33C242.771 58.24 244.161 64.52 250.421 66.97C251.221 67 250.711 65.56 251.621 64.94C258.261 60.41 264.291 49.18 272.461 42.97C281.141 36.37 305.061 29.85 309.931 43.42L305.701 50.28C301.531 50.37 297.291 52.56 293.441 52.95C279.841 54.32 274.291 50.12 262.421 60.93C255.501 67.23 251.511 80.83 252.941 89.95L247.821 89.36C247.261 80.22 244.321 66.6 236.871 60.5C224.041 50 220.091 54.11 205.431 52.95C204.541 52.88 196.011 51.29 195.411 51.05C192.361 49.81 188.941 45.3 190.441 41.98C190.851 41.08 194.681 36.41 195.621 36.12C197.711 35.48 209.801 35.59 212.371 35.99C220.541 37.27 233.141 47.04 238.541 53.31V53.33Z"
+                  fill="var(--color-primary)"
+                />
+                <path
+                  d="M267.31 28.32C264.5 31.68 261.37 33.87 259.08 36.6C256.3 39.9 253.49 50.22 247.59 46.87C244.22 44.96 243.37 39.49 240.95 36.43C237.72 32.34 230.62 28.52 228.15 23.23C225.38 17.29 223.88 4.83 230.92 1.45C237.29 -1.6 240.35 1.23 245.27 5.11C247.25 6.67 247.29 9.33 250.38 9C253.89 8.63 257.54 -0.319997 265.34 0.0100029C277.82 0.520003 274.52 19.42 269.76 26.33C269.12 27.26 267.9 27.63 267.31 28.33V28.32Z"
+                  fill="var(--color-primary)"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_divider">
+                  <rect width="496.86" height="159.06" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
           </div>
 
           <section
             id="work"
-            className="w-full px-4 lg:px-[10vw] py-4 overflow-hidden"
+            className="w-full px-4 lg:px-[6vw] pt-0 pb-4 overflow-hidden"
           >
             <Masonry
               items={projects}
               columnCount={columnCount}
-              columnGutter={24}
-              rowGutter={24}
+              columnGutter={16}
+              rowGutter={16}
               render={({ data, index }) => (
                 <ProjectCard {...data} index={index} />
               )}

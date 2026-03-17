@@ -45,7 +45,7 @@ export default function Spotify() {
   );
 
   return (
-    <div className="w-full pt-[10vh]">
+    <div className="w-full pt-[5vh]">
       <WorkNav
         sections={[
           { id: "context", label: "Context" },
@@ -56,7 +56,7 @@ export default function Spotify() {
 
       <div
         ref={contentRef}
-        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[22vw] lg:pr-[10vw]"
+        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[14vw] lg:pr-[6vw]"
       >
         <WorkHeader
           subtitle="FALL 2024"
@@ -67,17 +67,20 @@ export default function Spotify() {
 
         <WorkSection id="context" label="Context">
           <p className="body text-[var(--color-secondary)]">
-            This is a personal project of mine made my junior year of high
-            school or around Feb 2024 (?). Initially, an experimental project
-            for a school assignment evolved into an award winning piece that
-            earned{" "}
-            <strong>
-              3rd place in the Student Television Network Spring Nationals under
-              the Commercial category
-            </strong>{" "}
-            in 2024. My digital media teacher gave me so much support and
-            feedback and this was really the kick start to my motivation to make
-            more motion design.
+            I made this for an assignment in my high school digital media class.
+            However, with my digital media teacher's support and feedback, it
+            was awarded 3rd place in the Student Television Network Spring
+            Nationals under the Commercial category in 2024.
+          </p>
+          <p className="body text-[var(--color-secondary)]">
+            It's been 2 years since I made this, I don't remember much about the
+            process. However, I do remember it being a lot of fun and rewarding
+            to see my work recognized as well as the idea of making multiple
+            iterations.
+          </p>
+          <p className="body text-[var(--color-secondary)]">
+            I started taking motion design more seriously and explored more
+            about how it can influence user experience.
           </p>
         </WorkSection>
 

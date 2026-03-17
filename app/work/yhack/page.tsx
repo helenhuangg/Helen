@@ -40,7 +40,7 @@ export default function YHack() {
   );
 
   return (
-    <div className="w-full pt-[10vh]">
+    <div className="w-full pt-[5vh]">
       <WorkNav
         sections={[
           { id: "overview", label: "Overview" },
@@ -56,7 +56,7 @@ export default function YHack() {
 
       <div
         ref={contentRef}
-        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[22vw] lg:pr-[10vw]"
+        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[14vw] lg:pr-[6vw]"
       >
         <WorkHeader
           subtitle="YHACK SPRING 2026"
@@ -106,15 +106,6 @@ export default function YHack() {
               different hackathons (eg. TreeHacks, HackMIT, HackPrinceton
               etc...). Looking back, if I had the experience, I definitely
               wouldn&apos;t of taken as long as I did.
-            </p>
-            <p>
-              I was left with a strong foundation from Mandy and from there I
-              took ownership of every visual/design decision made to the site.
-              From finalizing the typography to defining the full page layout
-              and scroll experience. I even created my first design system! My
-              research involved understanding what worked in hackathon websites
-              in terms of layout, hierarchy, and first impressions. I was
-              responsible for designing from the Hero section to the Footer.
             </p>
             <div className="flex flex-col gap-2">
               <h5 className="subheadline">Team Members:</h5>
@@ -169,7 +160,7 @@ export default function YHack() {
             As the theme was already set and key branding decisions met by
             Mandy, I focused my goals on translating that creative direction
             into a site thats: cohesive, immersive, and exciting to scroll
-            through.
+            through!
           </p>
           <div className="flex flex-col lg:flex-row gap-4 w-full">
             {[

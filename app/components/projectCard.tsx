@@ -25,6 +25,7 @@ const ProjectCard = ({
   const cardRef = useRef<HTMLDivElement>(null);
   const defaultImgRef = useRef<HTMLImageElement>(null);
   const hoverImgRef = useRef<HTMLImageElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
   const [isMobile, setIsMobile] = useState(true); // Default mobile to avoid loading hover image
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const ProjectCard = ({
       gsap.set(cardRef.current, { scale: 1 });
       gsap.set(defaultImgRef.current, { opacity: 1 });
       gsap.set(hoverImgRef.current, { opacity: 0 });
+      gsap.set(descRef.current, { opacity: 0, y: 12 });
     }
   }, [isMobile]);
 
@@ -48,6 +50,12 @@ const ProjectCard = ({
     });
     gsap.to(defaultImgRef.current, { opacity: 0, duration: 0.3 });
     gsap.to(hoverImgRef.current, { opacity: 1, duration: 0.3 });
+    gsap.to(descRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.3,
+      ease: "power2.out",
+    });
   };
 
   const handleMouseLeave = () => {
@@ -59,13 +67,23 @@ const ProjectCard = ({
     });
     gsap.to(defaultImgRef.current, { opacity: 1, duration: 0.3 });
     gsap.to(hoverImgRef.current, { opacity: 0, duration: 0.3 });
+    gsap.to(descRef.current, {
+      opacity: 0,
+      y: 12,
+      duration: 0.3,
+      ease: "power2.out",
+    });
   };
 
   return (
-    <Link href={href} className="project-card flex flex-col gap-4 self-stretch" data-order={index}>
+    <Link
+      href={href}
+      className="project-card flex flex-col gap-4 self-stretch"
+      data-order={index}
+    >
       <div
         ref={cardRef}
-        className="overflow-hidden rounded-lg relative"
+        className="overflow-hidden rounded-sm relative"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -85,8 +103,8 @@ const ProjectCard = ({
         )}
       </div>
 
-      <div className="flex flex-col items-start self-stretch">
-        <div className="flex justify-between items-start self-stretch">
+      <div className="flex flex-col items-start self-stretch gap-1">
+        <div className="flex justify-between items-center self-stretch">
           <h3 className="cardTitle">{title}</h3>
           <div className="flex gap-1">
             {tags.map((tag) => (
@@ -100,7 +118,17 @@ const ProjectCard = ({
             ))}
           </div>
         </div>
-        <p className="cardDescription">{description}</p>
+        <p
+          ref={descRef}
+          className="cardDescription"
+          style={
+            !isMobile
+              ? { opacity: 0, transform: "translateY(12px)" }
+              : undefined
+          }
+        >
+          {description}
+        </p>
       </div>
     </Link>
   );

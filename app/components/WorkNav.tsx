@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
@@ -17,6 +17,8 @@ export default function WorkNav({ sections }: WorkNavProps) {
   const [mounted, setMounted] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [visible, setVisible] = useState(true);
+  const [backHidden, setBackHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     setMounted(true);
@@ -29,6 +31,47 @@ export default function WorkNav({ sections }: WorkNavProps) {
       mq.removeEventListener("change", handler);
     };
   }, []);
+
+  // Mobile: hide back button as soon as user scrolls down, show when scrolling up
+  useEffect(() => {
+    if (!mounted || visible) return;
+
+    const scrollEl = document.getElementById("smooth-wrapper");
+    if (!scrollEl) return;
+
+    const getScrollTop = () =>
+      scrollEl.scrollTop ?? document.documentElement.scrollTop ?? 0;
+
+    lastScrollY.current = getScrollTop();
+
+    const TOP_THRESHOLD = 80; // Near top: always show (avoids overscroll bounce hiding it)
+
+    const updateFromScroll = () => {
+      const current = getScrollTop();
+      const delta = current - lastScrollY.current;
+      if (current < TOP_THRESHOLD) {
+        setBackHidden(false); // Near top: always show
+      } else if (Math.abs(delta) > 1) {
+        setBackHidden(delta > 0);
+      }
+      lastScrollY.current = current;
+    };
+
+    const onScroll = () => updateFromScroll();
+    scrollEl.addEventListener("scroll", onScroll, { passive: true });
+
+    let rafId: number;
+    const poll = () => {
+      updateFromScroll();
+      rafId = requestAnimationFrame(poll);
+    };
+    rafId = requestAnimationFrame(poll);
+
+    return () => {
+      scrollEl.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, [mounted, visible]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -93,23 +136,35 @@ export default function WorkNav({ sections }: WorkNavProps) {
 
   if (!visible) {
     return (
-      <div className="px-4 pt-4">
-        <button
-          onClick={handleBack}
-          className="flex items-center justify-center px-[5px] text-[13px] tracking-[-0.65px] whitespace-nowrap cursor-pointer font-[family-name:var(--font-dm-mono)]"
+      <>
+        <div
+          className="fixed left-0 top-0 z-[9998] w-full px-4 pt-4 transition-opacity duration-200 ease-out"
           style={{
-            color: "var(--color-primary)",
+            top: 56,
+            paddingTop: "max(16px, env(safe-area-inset-top))",
+            opacity: backHidden ? 0 : 1,
+            pointerEvents: backHidden ? "none" : "auto",
           }}
         >
-          ← BACK
-        </button>
-      </div>
+          <button
+            onClick={handleBack}
+            className="flex items-center justify-center px-[5px] text-[13px] tracking-[-0.65px] whitespace-nowrap cursor-pointer font-[family-name:var(--font-dm-mono)]"
+            style={{
+              color: "var(--color-primary)",
+            }}
+          >
+            ← BACK
+          </button>
+        </div>
+        {/* Spacer so content doesn't sit under fixed back button */}
+        <div className="h-0 pt-14" aria-hidden />
+      </>
     );
   }
 
   return createPortal(
     <nav
-      className="fixed left-[10vw] top-[10vw] w-[10vw] pr-4 flex flex-col items-start font-[family-name:var(--font-dm-mono)]"
+      className="fixed left-[6vw] top-[6vw] w-[6vw] pr-3 flex flex-col items-start font-[family-name:var(--font-dm-mono)]"
       style={{
         zIndex: 9999,
         pointerEvents: "auto",

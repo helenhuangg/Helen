@@ -19,7 +19,7 @@
   --color-secondary: #6b757f;
   --color-accent: #778ba4;
   --color-highlight: #b3bfcb;
-  --color-background: #eff0f2;
+  --color-background: #eff0f0;
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -282,11 +282,11 @@
 .cardDescription {
   color: var(--color-secondary);
   font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.32px;
+  letter-spacing: -0.5px;
 }
 
 .cardTag {
