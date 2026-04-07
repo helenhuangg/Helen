@@ -143,7 +143,7 @@ const Home = () => {
 
   useGSAP(() => {
     if (loading) {
-      gsap.set(heroBgRef.current, { scale: 1.15 });
+      gsap.set(heroBgRef.current, { scale: 0.92 });
       return;
     }
 

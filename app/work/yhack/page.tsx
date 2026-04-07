@@ -4,11 +4,30 @@ import WorkNav from "@/app/components/WorkNav";
 import WorkHeader from "@/app/components/WorkHeader";
 import WorkSection from "@/app/components/WorkSection";
 import WorkInfoBar from "@/app/components/WorkInfoBar";
+import WorkMediaSlot, {
+  type WorkMediaSlotImage,
+} from "@/app/components/WorkMediaSlot";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const YHACK_MOCKUP_SECTION_ORDER = [
+  "Home",
+  "About",
+  "Tracks",
+  "FAQ",
+  "Footer",
+] as const;
+
+const YHACK_FINAL_MOCKUP_GIFS: WorkMediaSlotImage[] = [1, 2, 3, 4, 5].map(
+  (n, i) => ({
+    src: `/gifs/${encodeURIComponent(`Convert to GIF project (${n}).gif`)}`,
+    alt: `YHack ${YHACK_MOCKUP_SECTION_ORDER[i]} section mockup`,
+    sectionLabel: YHACK_MOCKUP_SECTION_ORDER[i],
+  }),
+);
 
 export default function YHack() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -40,7 +59,7 @@ export default function YHack() {
   );
 
   return (
-    <div className="w-full pt-[5vh]">
+    <div className="w-full pt-[5vh] lg:pt-[calc(5rem+5vh)]">
       <WorkNav
         sections={[
           { id: "overview", label: "Overview" },
@@ -56,7 +75,7 @@ export default function YHack() {
 
       <div
         ref={contentRef}
-        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[14vw] lg:pr-[6vw]"
+        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[calc(6vw+10rem+0.75rem)] lg:pr-[6vw]"
       >
         <WorkHeader
           subtitle="YHACK SPRING 2026"
@@ -79,11 +98,12 @@ export default function YHack() {
 
         <WorkSection id="overview" label="OVERVIEW" headline="What is YHack?">
           <p>
-            I was introduced by a friend to help design the main YHack Spring
-            2026 website. YHack is Yale&apos;s flagship hackathon, bringing in
-            over 600 college builders for a 24 hours of hacking. 5 weeks prior
-            to the launch date, the site was still blank but there was a theme
-            and it was <span style={{ color: "#f23232" }}>Love</span>.
+            I was introduced by a friend (Grady) to help design the main YHack
+            Spring 2026 website. YHack is Yale&apos;s flagship hackathon,
+            bringing in over 600 college builders for a 24 hours of hacking. 5
+            weeks prior to the launch date, the site was still blank but there
+            was a theme and it was{" "}
+            <span style={{ color: "#f23232" }}>Love</span>.
           </p>
         </WorkSection>
 
@@ -192,8 +212,10 @@ export default function YHack() {
 
         <WorkSection id="ideation" label="IDEATION" headline="Starting Big">
           <p>
-            Kicking off with a broad brainstorm, after meeting with Mandy and
-            Zoya some of the key ideas emerged:
+            I met with Mandy and Zoya on Zoom to discuss logistics. I was
+            originally only doing the colored version of the website but I ended
+            up brainstorming and drafting a sketch as well as making the
+            wordmark on top.
           </p>
           <div className="flex flex-col lg:flex-row gap-4 w-full">
             {[
@@ -222,28 +244,29 @@ export default function YHack() {
             ))}
           </div>
           <p>
-            With a rough sketch and some thought, I finalized the typography and
-            developed a design system for the site. There are still hints of my
-            initial sketch within the final deliverable, however, it&apos;s
-            still completely different.
+            With a rough sketch and some thought, I finalized the typography,
+            wordmark, and developed a design system for the site. I picked one
+            of the two color palettes provided by Mandy. There are still hints
+            of my initial sketch within the final deliverable, however,
+            it&apos;s still completely different.
           </p>
-          <div
-            className="w-full h-[675px] overflow-hidden relative"
-            style={{
-              backgroundColor: "var(--color-highlight)",
-              border: "1px solid var(--color-accent)",
-            }}
-          >
-            <p
-              className="absolute left-4 top-3 text-[12px] tracking-[-0.6px] uppercase"
-              style={{
-                fontFamily: "var(--font-dm-mono)",
-                color: "var(--color-accent)",
-              }}
-            >
-              Design System + Rough draft
-            </p>
-          </div>
+          <WorkMediaSlot
+            label="Design System + Rough draft"
+            images={[
+              {
+                src: "/images/yhack-ds-typography.png",
+                alt: "YHack typography, text sample, and wordmark",
+              },
+              {
+                src: "/images/yhack-ds-color-palette.png",
+                alt: "YHack color palette",
+              },
+              {
+                src: "/images/yhack-ds-wireframe-sketch.png",
+                alt: "YHack hand-drawn landing page wireframe",
+              },
+            ]}
+          />
         </WorkSection>
 
         <WorkSection
@@ -267,32 +290,34 @@ export default function YHack() {
                 color: "var(--color-primary)",
               }}
             >
-              How do we design a site that is both immersive and cohesive while
-              staying executable in the time frame and communicating the
-              content?
+              How can I design a site that is both immersive and cohesive while
+              staying executable in the time frame and communicating the content
+              effectively?
             </p>
           </div>
           <p>
             This stage was all about structure, locking into content hierarchy,
             determining scroll interactions, and identifying required assets.
           </p>
-          <div
-            className="w-full h-[857px] overflow-hidden relative"
-            style={{
-              backgroundColor: "var(--color-highlight)",
-              border: "1px solid var(--color-accent)",
-            }}
-          >
-            <p
-              className="absolute left-4 top-3 text-[12px] tracking-[-0.6px] uppercase"
-              style={{
-                fontFamily: "var(--font-dm-mono)",
-                color: "var(--color-accent)",
-              }}
-            >
-              KEY FEATURES + WIREFRAMES
-            </p>
-          </div>
+          <WorkMediaSlot
+            label="KEY FEATURES + WIREFRAMES"
+            images={[
+              {
+                src: "/images/yhack-wireframes-figma-canvas.png",
+                alt: "Figma workspace: wireframe iterations, color mockups, sketch, and mobile artboards",
+                caption:
+                  "Peep all my sketches and drafts! I went through too many iterations…",
+              },
+              {
+                src: "/images/yhack-wireframes-hero-iterations.png",
+                alt: "Hero wireframe options, must-haves, and apply CTA flow sketches",
+              },
+              {
+                src: "/images/yhack-wireframes-section-sketches.png",
+                alt: "Section sketches: About, Sponsors, Tracks, and layout notes",
+              },
+            ]}
+          />
         </WorkSection>
 
         <WorkSection
@@ -309,23 +334,41 @@ export default function YHack() {
             assets like clouds, wax stamps, envelopes, postcards, and the
             Sterling Memorial Library.
           </p>
-          <div
-            className="w-full h-[846px] overflow-hidden relative"
-            style={{
-              backgroundColor: "var(--color-highlight)",
-              border: "1px solid var(--color-accent)",
-            }}
-          >
-            <p
-              className="absolute left-4 top-3 text-[12px] tracking-[-0.6px] uppercase"
-              style={{
-                fontFamily: "var(--font-dm-mono)",
-                color: "var(--color-accent)",
-              }}
-            >
-              ASSETS I MADE
-            </p>
-          </div>
+          <WorkMediaSlot
+            label="ASSETS I MADE"
+            images={[
+              {
+                src: "/images/yhack-asset-floating-islands.png",
+                alt: "Floating island illustrations",
+                caption: "floating islands",
+              },
+              {
+                src: "/images/yhack-asset-tracks-stamps.png",
+                alt: "Track icons as heart-shaped wax seals",
+                caption: "tracks as heart-shaped stamps",
+              },
+              {
+                src: "/images/yhack-asset-envelopes.png",
+                alt: "Blue envelope UI components and states",
+                caption: "envelopes",
+              },
+              {
+                src: "/images/yhack-asset-wordmark.png",
+                alt: "YHack wordmark",
+                caption: "yhack wordmark",
+              },
+              {
+                src: "/images/yhack-asset-sterling-library.png",
+                alt: "Sterling Memorial Library illustration",
+                caption: "sterling memorial library",
+              },
+              {
+                src: "/images/yhack-asset-clouds.png",
+                alt: "Cloud illustrations",
+                caption: "clouds",
+              },
+            ]}
+          />
         </WorkSection>
 
         <WorkSection
@@ -334,33 +377,31 @@ export default function YHack() {
           headline="A Website Designed with Love"
         >
           <p>Here is a full list of features I designed!</p>
-          <div
-            className="w-full h-[1995px] overflow-hidden relative"
-            style={{
-              backgroundColor: "var(--color-highlight)",
-              border: "1px solid var(--color-accent)",
-            }}
-          >
-            <p
-              className="absolute left-4 top-3 text-[12px] tracking-[-0.6px] uppercase"
-              style={{
-                fontFamily: "var(--font-dm-mono)",
-                color: "var(--color-accent)",
-              }}
-            >
-              MOCKUPS + DESIGN DECISIONS
-            </p>
-            <p
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-[12px] tracking-[-0.6px] uppercase"
-              style={{
-                fontFamily: "var(--font-dm-mono)",
-                color: "var(--color-accent)",
-              }}
-            >
-              THIS IS ONLY MY FINAL MOCKUP, CHANGES WILL BE MADE &rarr; CHECK
-              OUT YHACK.ORG
-            </p>
-          </div>
+          <WorkMediaSlot
+            label="MOCKUPS + DESIGN DECISIONS"
+            images={YHACK_FINAL_MOCKUP_GIFS}
+            imagesLayout="stack"
+            footer={
+              <p
+                className="text-[12px] tracking-[-0.6px] uppercase"
+                style={{
+                  fontFamily: "var(--font-dm-mono)",
+                  color: "var(--color-accent)",
+                }}
+              >
+                View live site @{" "}
+                <a
+                  href="https://yhack.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-[3px] transition-opacity hover:opacity-80"
+                  style={{ color: "var(--color-accent)" }}
+                >
+                  yhack.org
+                </a>
+              </p>
+            }
+          />
         </WorkSection>
 
         <WorkSection

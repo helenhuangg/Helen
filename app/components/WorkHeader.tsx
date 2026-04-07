@@ -62,16 +62,9 @@ export default function WorkHeader({
         },
       });
 
-      gsap.set(".wh-hero", { clipPath: "inset(100% 0% 0% 0%)" });
-      gsap.set(".wh-hero img", { scale: 1.2 });
-
       tl.to(
         ".wh-hero",
-        { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: "power4.inOut" },
-        0.2,
-      ).to(
-        ".wh-hero img",
-        { scale: 1, duration: 1.4, ease: "power2.out" },
+        { opacity: 1, duration: 0.85, ease: "power2.out" },
         0.2,
       );
     },
@@ -95,7 +88,7 @@ export default function WorkHeader({
         </h3>
       </div>
 
-      <div className="wh-hero w-full rounded-[20px] overflow-hidden aspect-video">
+      <div className="wh-hero w-full rounded-[20px] overflow-hidden aspect-video opacity-0">
         <img src={image} alt={alt} className="w-full h-full object-cover" />
       </div>
     </div>

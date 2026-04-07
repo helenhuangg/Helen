@@ -164,7 +164,7 @@ export default function WorkNav({ sections }: WorkNavProps) {
 
   return createPortal(
     <nav
-      className="fixed left-[6vw] top-[6vw] w-[6vw] pr-3 flex flex-col items-start font-[family-name:var(--font-dm-mono)]"
+      className="fixed left-[6vw] top-[calc(5rem+5vh+10px)] w-max pr-2 flex flex-col items-start font-[family-name:var(--font-dm-mono)]"
       style={{
         zIndex: 9999,
         pointerEvents: "auto",
