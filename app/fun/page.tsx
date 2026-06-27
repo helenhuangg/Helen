@@ -5,7 +5,16 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import FunProjectCard from "@/app/components/FunProjectCard";
 
-const FUN_COLUMNS = [
+type FunProject = {
+  title: string;
+  tag: string;
+  description: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  placeholderHeight?: number;
+};
+
+const FUN_COLUMNS: FunProject[][] = [
   [
     {
       title: "DFA BDD ‘25-26 Stickers",
@@ -57,7 +66,7 @@ const FUN_COLUMNS = [
       placeholderHeight: 210,
     },
   ],
-] as const;
+];
 
 export default function Fun() {
   const containerRef = useRef<HTMLDivElement>(null);
