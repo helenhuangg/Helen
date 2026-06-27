@@ -210,6 +210,34 @@
   letter-spacing: -0.8px;
 }
 
+.hero-caption {
+  color: var(--color-accent);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.8px;
+}
+
+.hero-caption-emphasis {
+  color: var(--color-primary);
+  font-family: var(--font-Adobe-Caslon-Pro);
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.4px;
+}
+
+.hero-stack {
+  --hero-wordmark-half: calc(min(740px, 76vw) * 232 / 1004 / 2);
+}
+
+.hero-copy {
+  top: calc(50% + var(--hero-wordmark-half) + 1rem);
+}
+
 .footnote {
   position: relative;
   color: var(--color-primary);

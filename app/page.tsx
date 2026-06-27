@@ -253,22 +253,24 @@ const Home = () => {
       <div
         className={`transition-opacity duration-500 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
       >
-        <div className="flex flex-col items-start gap-0 w-full">
+        <div className="flex w-full flex-col gap-0">
           <div
             ref={heroBgRef}
-            className="hero-bg relative w-full flex flex-col justify-start items-start gap-8 px-0 pt-24 pb-0"
+            className="hero-bg flex min-h-[100dvh] w-full justify-center px-4 lg:px-[6vw]"
           >
-            <Magnetic strength={0.1} range={300}>
-              <div className="flex flex-col gap-16 w-full px-4 lg:px-[6vw]">
-                <section className="flex flex-col items-start gap-1 self-stretch">
-                  <div className="align-self-stretch">
-                    <svg
-                      className="larger-title"
-                      viewBox="0 0 1004 232"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      style={{ width: "100%", height: "auto" }}
-                    >
+            <div className="hero-stack relative h-[100dvh] w-full max-w-[min(1004px,calc(100vw-2rem))]">
+              <div className="hero-wordmark absolute left-1/2 top-1/2 z-10 w-full -translate-x-1/2 -translate-y-1/2">
+                <Magnetic
+                  strength={0.1}
+                  range={300}
+                  style={{ display: "block", width: "100%" }}
+                >
+                  <svg
+                    className="larger-title mx-auto block h-auto w-full max-w-[min(740px,76vw)]"
+                    viewBox="0 0 1004 232"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                       <path
                         d="M187.75 31.27C187.45 31.56 185.07 32.82 184.63 32.9C179.31 33.89 173.55 29.81 169.13 30.39C166.74 30.71 162.62 36.16 161.5 38.24C160.47 40.14 160.35 42.24 159.63 43.85C156.71 50.33 150.24 58.2 145.92 63.73C141.04 69.99 138.69 75.5 135.27 82.39C131.17 90.66 125.31 97.54 119.68 104.74C119.29 105.24 118.72 105.38 118.94 106.24C120.54 106.22 121.57 104.93 123.16 104.72C126.09 104.33 130.98 105.38 133.57 104.64C135.89 103.97 142.24 98.01 145.43 96.52C148.08 95.29 157 92.36 159.78 91.89C163.05 91.34 165.01 92.54 168.15 90.27C172.97 86.78 178.26 72.04 181.64 66.32C186.71 57.73 194.12 51.45 199.89 43.63C202.63 39.92 202.89 37.21 207.23 33.99C209.53 32.28 226.02 23.49 228.24 23.04C230.26 22.63 232.55 23.16 234.6 22.9C238.26 22.44 241.8 20.36 246.12 20.39C253 20.44 262.19 26.37 262.88 33.64C264.33 48.83 249.8 55.56 239.77 63.37C233.63 68.15 228.55 71.81 222.27 76.34C220.74 77.44 217.97 80.92 216.25 81.65C214.53 82.38 211.19 82.44 209.39 83.04C204.95 84.53 199.22 86.43 194.95 88.08C192.51 89.03 189.88 91.23 187.5 92.12C182.57 93.97 176.63 93.03 172.39 96.48C170.42 98.08 166.64 103.22 165.1 105.42C160.92 111.39 157.43 118.24 154.03 124.56C152.05 128.24 148.7 134.47 145.95 137.45C144.17 139.38 141.47 140.38 139.71 142.7C137.42 145.73 131.66 156 131.05 159.5C130.56 162.3 129.77 166.67 129.5 169.42C129.34 171.08 129.2 174.19 129.54 175.74C129.84 177.08 137.75 187.01 139.17 188.08C140.84 189.34 142.53 189.86 144.65 189.54C154.13 188.13 161.53 188.24 171.01 184.92C176.81 182.89 175.95 182.11 179.67 178.59C182.37 176.03 186.34 173.92 190.14 174.62C192.86 175.12 193.96 177.93 192.2 180.13C190.44 182.33 180.86 188.55 178.14 189.04C174.21 189.74 169.76 189.66 165.93 191.32C161.84 193.09 159.6 197.94 154.18 198.55C144.46 199.64 125.37 195.86 122.58 184.69C118.91 169.98 125.09 158.89 131.12 146.59C132.73 143.3 134 139.34 135.72 136.21C139.74 128.92 146.98 123.47 151.59 116.6C154.99 111.53 157.5 105.55 161.93 101.01C162 100.62 161.49 100.73 161.18 100.75C154.74 101.3 149.65 104.93 143.52 107.08C139.05 108.65 133.57 109.6 129.17 111.21C127.02 112 124.88 113.81 122.86 114.39C119.31 115.42 114.57 115.12 111.42 117.43C110.05 118.43 104.7 126.46 103.45 128.43C100.72 132.72 98.78 137.46 95.68 141.62C92.37 146.06 88.45 149.87 85.32 154.75C79.48 163.85 73.91 180.72 65.11 186.54C62.48 188.28 59.4 189.22 56.82 191.14C55.23 192.32 53.77 194.78 52.26 196.05C49.71 198.2 36.13 203.41 32.73 203.99C23.93 205.47 17.65 201.58 12.26 195.05C4.59 185.75 8.18 173.78 13.25 164.1C16.19 158.49 25.78 148.26 31.57 145.97C49.3 138.93 65.06 128.19 82.9 121.38C84.47 120.78 86.6 120.54 88.37 119.86C94.85 117.36 101.13 114.34 107.76 112.28C109.2 109.15 110.93 106.14 112.63 103.15C117.31 94.93 122.43 86.21 127.9 78.39C133.49 70.41 140.79 63.25 146.66 55.31C152.53 47.37 155.34 38.57 161.24 30.45C161.73 29.78 162.37 29.25 162.94 28.66L154.22 29.43C147.83 31.03 139.84 29.13 133.22 28.39C129.33 27.96 125.4 29 121.7 28.93C117.78 28.86 113.45 27.25 109.72 26.91C98.21 25.85 79 31.42 68.01 35.65C57.87 39.54 51.46 48.83 46.03 57.72C42.94 62.79 43.01 67.63 43.52 73.55C43.96 78.62 47.32 89.77 49.62 94.4C52.13 99.45 59.71 100.7 64.73 100.77C68.23 100.82 71.92 99.84 75.27 100.23C75.9 100.3 80.02 101.49 80.3 101.7C82.76 103.57 77.47 108.38 75.75 108.72C71.78 109.49 67.04 107.15 63.24 106.26C58.23 105.09 54.15 104.94 49.27 102.25C43.75 99.19 44.34 96.55 41.04 92.65C37.99 89.05 35.16 87.44 34.06 82.01C31.83 70.95 38.15 51.79 47.02 44.62C51.63 40.89 54.66 37.98 59.01 34.14C69.95 24.49 82.61 20.24 97.27 20.41C104.25 20.49 115.24 20.15 121.75 20.91C127.43 21.58 132.53 23.75 139.21 23.94C146.5 24.15 154.07 22.13 161.22 22.92C162.92 23.11 165.12 24.55 166.2 24.44C167.51 24.3 168.53 22.47 169.39 21.98C171.28 20.91 178.79 18.31 180.7 18.39C185.81 18.61 191.77 27.36 187.8 31.24L187.75 31.27ZM222.6 66.58C233.53 58.05 251.1 54.73 252.9 38.19C253.34 34.1 250.77 31.45 247.33 29.75C244.86 28.53 237.4 27.45 234.75 28.05C233.45 28.35 232.48 29.7 231.36 30.15C229.37 30.96 226.27 31.44 224.44 32.22C222.81 32.92 205.09 47.96 203.44 49.78C196.87 57.02 189.44 67.97 183.62 76.06C182.56 77.53 175.5 88.44 176.43 89.31C177.16 89.47 177.71 89.21 178.37 89.01C195.73 83.78 208.46 77.62 222.61 66.58H222.6ZM103.95 119.25C100.58 120.33 97.08 121.43 93.86 122.89C88.42 125.37 83.6 129.55 78.3 131.8C67.17 136.53 57.94 141.13 47.4 147.24C39.78 151.66 33 156.39 26.37 162.16C23.52 164.64 15.7 171.26 14.38 174.26C13.59 176.07 12.44 180.81 13.25 182.59C13.48 183.1 20.31 190.28 21.03 190.79C22.76 192 24.12 192.37 26.24 192.57C35.55 193.47 47.68 190.71 55.34 185.25C57.36 183.81 59.28 181.26 61.22 179.62C65.26 176.2 67.48 175.94 70.46 170.88C77.01 159.77 84.08 149.15 90.43 137.93C92.94 133.5 96.9 130.53 99.74 126.52C101.24 124.4 102.35 121.41 103.94 119.24L103.95 119.25Z"
                         fill="var(--color-primary)"
@@ -286,69 +288,68 @@ const Home = () => {
                         fill="var(--color-primary)"
                       />
                     </svg>
-                  </div>
-                  <ul className="flex flex-col gap-0">
-                    <li className="flex items-start gap-2">
-                      <p className="caption">
-                        Currently studying
-                        <span className="caption-2">
-                          {" "}
-                          Computing and the Arts
-                        </span>{" "}
-                        at
-                        <span className="caption-2"> Yale University*</span>.
-                      </p>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <p className="caption">
-                        An interdisciplinary designer with a lot of love for
-                        <span className="caption-2">
-                          {" "}
-                          motion, product, and design engineering.
-                        </span>
-                      </p>
-                    </li>
-                  </ul>
-                </section>
+                </Magnetic>
               </div>
-            </Magnetic>
+              <ul className="hero-copy absolute left-1/2 flex w-full max-w-[42rem] -translate-x-1/2 flex-col items-center gap-0 text-center">
+                  <li className="w-full">
+                    <p className="hero-caption mx-auto max-w-[42rem] text-center">
+                      Currently studying
+                      <span className="hero-caption-emphasis">
+                        {" "}
+                        Computing and the Arts
+                      </span>{" "}
+                      at
+                      <span className="hero-caption-emphasis"> Yale University*</span>.
+                    </p>
+                  </li>
+                  <li className="w-full">
+                    <p className="hero-caption mx-auto max-w-[42rem] text-center">
+                      An interdisciplinary designer with a lot of love for
+                      <span className="hero-caption-emphasis">
+                        {" "}
+                        motion, product, and design engineering.
+                      </span>
+                    </p>
+                  </li>
+                </ul>
 
-            <section className="w-full flex justify-between items-center px-4 lg:px-[6vw]">
-              <div className="flex items-center gap-3">
-                <a
-                  href="mailto:helen.huang@example.com"
-                  className="footnote"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  email
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/hailuen"
-                  className="footnote"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  linkedin
-                </a>
-                <a
-                  href="https://www.github.com/helenhuangg"
-                  className="footnote"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  github
-                </a>
-              </div>
-              <div>
-                <a
-                  href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
-                  className="footnote"
-                >
-                  resume :D
-                </a>
-              </div>
-            </section>
+              <section className="hero-links absolute inset-x-0 bottom-0 flex w-full items-center justify-between pb-8">
+                <div className="flex items-center gap-3">
+                  <a
+                    href="mailto:helen.huang@example.com"
+                    className="footnote"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    email
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/hailuen"
+                    className="footnote"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    linkedin
+                  </a>
+                  <a
+                    href="https://www.github.com/helenhuangg"
+                    className="footnote"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    github
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
+                    className="footnote"
+                  >
+                    resume :D
+                  </a>
+                </div>
+              </section>
+            </div>
           </div>
 
           <div className="hero-divider w-full px-4 lg:px-[6vw] py-8 flex justify-center">
