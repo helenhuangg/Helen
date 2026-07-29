@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# video masters — export sources kept locally, too large for GitHub.
+# The web encodes (about-me.webm / about-me-alpha.mov / about-me.mp4) are tracked.
+/public/videos/about me.mov
+/public/videos/about me.MP4

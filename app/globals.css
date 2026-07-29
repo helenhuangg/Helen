@@ -220,6 +220,18 @@
   font-synthesis: weight;
 }
 
+/* Inline emphasis inside body copy — Caslon runs small, so it's bumped up
+   relative to its surrounding text. */
+.subtitle-emphasis {
+  color: var(--color-primary);
+  font-family: var(--font-Adobe-Caslon-Pro);
+  font-size: 1.2em;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.35px;
+  font-synthesis: weight;
+}
+
 .hero-stack {
   --hero-wordmark-half: calc(min(740px, 76vw) * 232 / 1004 / 2);
   --hero-content-width: min(42rem, calc(100vw - 2rem));
