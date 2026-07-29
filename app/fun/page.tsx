@@ -18,6 +18,7 @@ type FunProject = {
   imageSrc?: string;
   imageAlt?: string;
   placeholderHeight?: number;
+  href?: string;
 };
 
 const FUN_PROJECTS: FunProject[] = [
@@ -51,6 +52,7 @@ const FUN_PROJECTS: FunProject[] = [
       "Final project for CPSC 1001, made with my friends Carmen, Eden, and Johnny!",
     imageSrc: "/images/fun/yale-hunter.png",
     imageAlt: "Pixel art Yale Hunter game screenshot",
+    href: "https://github.com/helenhuangg/CPSC1001-Yale-Hunter",
   },
   {
     title: "Yale Supreme Court Advocacy Clinic",
@@ -65,6 +67,7 @@ const FUN_PROJECTS: FunProject[] = [
     description: "Commission website designed and built for my friend Elise",
     imageSrc: "/images/fun/kyurinas.png",
     imageAlt: "Elise commission website hero with lace frame and social links",
+    href: "https://virmiu.netlify.app/index.html",
   },
 ];
 
@@ -133,8 +136,7 @@ export default function Fun() {
               C
             </span>
             <span className="drop-cap-body">
-              reative stuff I do, for{" "}
-              <span className="drop-cap-clear-mobile">whatever reason.</span>
+              reative stuff I do, for whatever reason.
             </span>
           </span>
         </h1>
@@ -147,6 +149,9 @@ export default function Fun() {
           columnCount={columnCount}
           columnGutter={16}
           rowGutter={16}
+          // Scrolling happens inside #smooth-wrapper, not the window, so
+          // masonic's viewport virtualization would never reveal later cards.
+          overscanBy={Infinity}
           itemKey={(project, index) =>
             `${project.title}-${project.tag}-${index}`
           }
@@ -158,6 +163,7 @@ export default function Fun() {
               imageSrc={data.imageSrc}
               imageAlt={data.imageAlt}
               placeholderHeight={data.placeholderHeight}
+              href={data.href}
             />
           )}
         />

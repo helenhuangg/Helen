@@ -10,6 +10,7 @@ type FunProjectCardProps = {
   imageSrc?: string;
   imageAlt?: string;
   placeholderHeight?: number;
+  href?: string;
 };
 
 export default function FunProjectCard({
@@ -19,6 +20,7 @@ export default function FunProjectCard({
   imageSrc,
   imageAlt,
   placeholderHeight,
+  href,
 }: FunProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
@@ -65,28 +67,48 @@ export default function FunProjectCard({
     });
   };
 
+  const media = (
+    <div
+      ref={cardRef}
+      className={`group relative overflow-hidden rounded-sm ${href ? "cursor-pointer" : ""}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {imageSrc ? (
+        <img
+          src={imageSrc}
+          alt={imageAlt ?? title}
+          className="w-full object-cover"
+        />
+      ) : (
+        <div
+          className="w-full shrink-0 bg-white"
+          style={{ height: placeholderHeight ?? 280 }}
+          aria-hidden
+        />
+      )}
+      {href && (
+        <span
+          className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          aria-hidden
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-black/55 text-[20px] leading-none text-white backdrop-blur-[2px]">
+            ↗
+          </span>
+        </span>
+      )}
+    </div>
+  );
+
   return (
     <article className="fun-card flex flex-col gap-4 self-stretch">
-      <div
-        ref={cardRef}
-        className="relative overflow-hidden rounded-sm"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {imageSrc ? (
-          <img
-            src={imageSrc}
-            alt={imageAlt ?? title}
-            className="w-full object-cover"
-          />
-        ) : (
-          <div
-            className="w-full shrink-0 bg-white"
-            style={{ height: placeholderHeight ?? 280 }}
-            aria-hidden
-          />
-        )}
-      </div>
+      {href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {media}
+        </a>
+      ) : (
+        media
+      )}
 
       <div className="flex flex-col items-start gap-1 self-stretch">
         <div className="flex items-center justify-between self-stretch">

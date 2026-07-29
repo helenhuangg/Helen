@@ -138,12 +138,10 @@
   color: var(--color-primary);
 }
 
-/* Span-based drop cap — bottom of letter aligns with text */
+/* Span-based drop cap — letter flows inline so wrapped lines stay flush left.
+   line-height: 0 keeps the oversized glyph from inflating the first line box. */
 .drop-cap-inline {
-  display: inline-flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  column-gap: 0;
+  display: inline;
 }
 
 .drop-cap-letter {
@@ -151,31 +149,15 @@
   font-size: clamp(2.75rem, 9vw, 4.25rem);
   font-style: normal;
   font-weight: 400;
-  line-height: 1;
+  line-height: 0;
   margin-right: 0.05em;
   color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.drop-cap-body {
-  min-width: 0;
 }
 
 @media (min-width: 1024px) {
   .drop-cap-letter {
     font-size: clamp(3.5rem, 36px + 3vw, 5.5rem);
   }
-}
-
-@media (max-width: 1023px) {
-  .drop-cap-clear-mobile {
-    display: block;
-    margin-top: 0.15em;
-  }
-}
-
-.drop-cap-clear-mobile {
-  display: inline;
 }
 
 @media (min-width: 1024px) {
