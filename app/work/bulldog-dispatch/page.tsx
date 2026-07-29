@@ -5,11 +5,67 @@ import WorkNav from "@/app/components/WorkNav";
 import WorkHeader from "@/app/components/WorkHeader";
 import WorkSection from "@/app/components/WorkSection";
 import WorkInfoBar from "@/app/components/WorkInfoBar";
+import ScrollPlayVideo from "@/app/components/ScrollPlayVideo";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const NAV_SECTIONS = [
+  { id: "overview", label: "Overview" },
+  { id: "thanksgiving-food-drive", label: "Thanksgiving Food Drive" },
+  { id: "flower-sale-fundraiser", label: "Flower Sale Fundraiser" },
+  { id: "quickchews-commercial", label: "QuickChews Commercial" },
+  { id: "job-fair", label: "Job Fair" },
+  { id: "dog-dish", label: "Dog Dish" },
+  { id: "club-corner", label: "Club Corner" },
+] as const;
+
+const VIDEO_SECTIONS = [
+  {
+    id: "thanksgiving-food-drive",
+    label: "PROMOTIONAL VIDEO",
+    headline: "Thanksgiving Food Drive",
+    copy: "My school has an annual Thanksgiving food drive and I was tasked to make an informational video to spread the news! My goal was to make it simple, easy to follow but also engaging! Adding a variety of shapes and emphasising the main points while using school colors.",
+    src: "/videos/Thanksgiving Food Drive Promotional Video.mp4",
+  },
+  {
+    id: "flower-sale-fundraiser",
+    label: "PROMOTIONAL VIDEO",
+    headline: "Flower Sale Fundraiser",
+    copy: "Our club also participated in Student Television Network Film Convention that gets hosted at places from across the United States, however because of the distance, we were looking for funding. Since I was also going, I thought it was only right to promote the fundraiser that also happened to be in Feburary! Following a similar style, I chose to color pink to show love and used the flower concept as transitions.",
+    src: "/videos/Flower Sale Fundraiser Promotional Video.mp4",
+  },
+  {
+    id: "quickchews-commercial",
+    label: "COMMERCIAL VIDEO",
+    headline: "QuickChews Commercial",
+    copy: "For the Student Television Network, my friend and I collaborated to enter the Commercial category. I worked on the graphics while she handled the videography and direction.",
+    src: "/videos/QuickChews Commercial Video.mp4",
+  },
+  {
+    id: "job-fair",
+    label: "PROMOTIONAL VIDEO",
+    headline: "Job Fair",
+    copy: "Our district was hosting a job fair so I helped make an informational video!",
+    src: "/videos/D218 Job Fair Promotional Video.mp4",
+  },
+  {
+    id: "dog-dish",
+    label: "MOTION GRAPHICS",
+    headline: "Dog Dish",
+    copy: "Dog Dish was a segment that had short news compilation for the week or month and I made an intro for it!",
+    src: "/videos/Dog Dish Intro.mp4",
+  },
+  {
+    id: "club-corner",
+    label: "MOTION GRAPHICS",
+    headline: "Club Corner",
+    copy: "Club Corner was a new segment added before I graduated where we introduced clubs at my school to increase involvement and showcase each club!",
+    src: "/videos/Club Corner Intro.mp4",
+  },
+] as const;
 
 export default function BulldogDispatch() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -42,12 +98,7 @@ export default function BulldogDispatch() {
 
   return (
     <div className="w-full pt-[5vh] lg:pt-[calc(5rem+5vh)]">
-      <WorkNav
-        sections={[
-          { id: "overview", label: "Overview" },
-          { id: "graphics", label: "Graphics" },
-        ]}
-      />
+      <WorkNav sections={[...NAV_SECTIONS]} />
 
       <div
         ref={contentRef}
@@ -82,164 +133,27 @@ export default function BulldogDispatch() {
           </p>
         </WorkSection>
 
-        <WorkSection
-          id="graphics"
-          label="PROMOTIONAL VIDEO"
-          headline="Thanksgiving Food Drive"
-          className="gap-6"
-        >
-          <p className="body text-[var(--color-secondary)]">
-            My school has an annual Thanksgiving food drive and I was tasked to
-            make an informational video to spread the news! My goal was to make
-            it simple, easy to follow but also engaging! Adding a variety of
-            shapes and emphasising the main points while using school colors.
-          </p>
-          <video
-            src="/videos/Thanksgiving Food Drive Promotional Video.mp4"
-            className="w-full object-cover"
-            autoPlay
-            loop
-            playsInline
-            controls
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="graphics"
-          label="PROMOTIONAL VIDEO"
-          headline="Flower Sale Fundraiser"
-          className="gap-6"
-        >
-          <p className="body text-[var(--color-secondary)]">
-            Our club also participated in Student Television Network Film
-            Convention that gets hosted at places from across the United States,
-            however because of the distance, we were looking for funding. Since
-            I was also going, I thought it was only right to promote the
-            fundraiser that also happened to be in Feburary! Following a similar
-            style, I chose to color pink to show love and used the flower
-            concept as transitions.{" "}
-          </p>
-          <video
-            src="/videos/Flower Sale Fundraiser Promotional Video.mp4"
-            className="w-full object-cover"
-            autoPlay
-            loop
-            playsInline
-            controls
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="graphics"
-          label="COMMERCIAL VIDEO"
-          headline="QuickChews Commercial"
-          className="gap-6"
-        >
-          <p className="body text-[var(--color-secondary)]">
-            For the Student Television Network, my friend and I collaborated to
-            enter the Commercial category. I worked on the graphics while she
-            handled the videography and direction.{" "}
-          </p>
-          <video
-            src="/videos/QuickChews Commercial Video.mp4"
-            className="w-full object-cover"
-            autoPlay
-            loop
-            playsInline
-            controls
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="graphics"
-          label="PROMOTIONAL VIDEO"
-          headline="Job Fair"
-          className="gap-6"
-        >
-          <p className="body text-[var(--color-secondary)]">
-            Our district was hosting a job fair so I helped make an
-            informational video!{" "}
-          </p>
-          <video
-            src="/videos/D218 Job Fair Promotional Video.mp4"
-            className="w-full object-cover"
-            autoPlay
-            loop
-            playsInline
-            controls
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="graphics"
-          label="MOTION GRAPHICS"
-          headline="Dog Dish"
-          className="gap-6"
-        >
-          <p className="body text-[var(--color-secondary)]">
-            Dog Dish was a segment that had short news compilation for the week
-            or month and I made an intro for it!{" "}
-          </p>
-          <video
-            src="/videos/Dog Dish Intro.mp4"
-            className="w-full object-cover"
-            autoPlay
-            loop
-            playsInline
-            controls
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="graphics"
-          label="MOTION GRAPHICS"
-          headline="Club Corner"
-          className="gap-6"
-        >
-          <p className="body text-[var(--color-secondary)]">
-            Club Corner was a new segment added before I graduated where we
-            introduced clubs at my school to increase involvement and showcase
-            each club!{" "}
-          </p>
-          <video
-            src="/videos/Club Corner Intro.mp4"
-            className="w-full object-cover"
-            autoPlay
-            loop
-            playsInline
-            controls
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </WorkSection>
+        {VIDEO_SECTIONS.map((section) => (
+          <WorkSection
+            key={section.id}
+            id={section.id}
+            label={section.label}
+            headline={section.headline}
+            className="gap-6"
+          >
+            <p className="body text-[var(--color-secondary)]">{section.copy}</p>
+            <ScrollPlayVideo
+              src={section.src}
+              className="w-full object-cover"
+              controls
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </WorkSection>
+        ))}
       </div>
     </div>
   );
