@@ -1,9 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import dynamic from "next/dynamic";
 import FunProjectCard from "@/app/components/FunProjectCard";
+
+const Masonry = dynamic(
+  () => import("masonic").then((mod) => ({ default: mod.Masonry })),
+  { ssr: false },
+) as unknown as typeof import("masonic").Masonry;
 
 type FunProject = {
   title: string;
@@ -14,62 +20,74 @@ type FunProject = {
   placeholderHeight?: number;
 };
 
-const FUN_COLUMNS: FunProject[][] = [
-  [
-    {
-      title: "DFA BDD ‘25-26 Stickers",
-      tag: "SPRING 2026",
-      description:
-        "Designing stickers for annual Bulldog Days event! I love stickers :)",
-      imageSrc: "/images/fun/dfa-bdd-stickers.png",
-      imageAlt: "DFA Bulldog Days sticker sheet in a plastic bag",
-    },
-    {
-      title: "Yale Hunter",
-      tag: "FALL 2025",
-      description:
-        "My final project for CPSC 1001, made with my friends Carmen, Eden, and Johnny!",
-      imageSrc: "/images/fun/yale-hunter.png",
-      imageAlt: "Pixel art Yale Hunter game screenshot",
-    },
-  ],
-  [
-    {
-      title: "Push or Pull?",
-      tag: "FALL 2025",
-      description:
-        "A zine for ART 1782 with a camera rented from Bass and frustrating InDesign",
-      imageSrc: "/images/fun/push-or-pull.png",
-      imageAlt: "Push or Pull zine spread in a binder",
-    },
-    {
-      title: "Yale Supreme Court Advocacy Clinic",
-      tag: "FALL 2025",
-      description: "Facing my biggest fears of illustrations by making logos.",
-      imageSrc: "/images/fun/yale-supreme-court.png",
-      imageAlt: "Yale Supreme Court Advocacy Clinic logo with iguana",
-    },
-  ],
-  [
-    {
-      title: "Yale Math Competitions",
-      tag: "FALL 2025",
-      description:
-        "Another project for ART 1782 but I’m remaking a poster I found on the streets. (Sorry..)",
-      placeholderHeight: 446,
-    },
-    {
-      title: "Push or Pull?",
-      tag: "FALL 2025",
-      description:
-        "A zine for ART 1782 with a camera rented from Bass and frustrating InDesign",
-      placeholderHeight: 210,
-    },
-  ],
+const FUN_PROJECTS: FunProject[] = [
+  {
+    title: "DFA BDD ‘25-26 Stickers",
+    tag: "SPRING 2026",
+    description:
+      "Designing stickers for the very event that introduced me to DFA!",
+    imageSrc: "/images/fun/dfa-bdd-stickers.png",
+    imageAlt: "DFA Bulldog Days sticker sheet in a plastic bag",
+  },
+  {
+    title: "Push or Pull?",
+    tag: "FALL 2025",
+    description:
+      "A zine for ART 1782 with a camera rented from Bass and frustrating InDesign",
+    imageSrc: "/images/fun/push-or-pull.png",
+    imageAlt: "Push or Pull zine spread in a binder",
+  },
+  {
+    title: "Yale Math Competitions",
+    tag: "FALL 2025",
+    description: "Poster re-design for Yale Math Competitions for ART 1782",
+    imageSrc: "/images/fun/yale-math-competitions.png",
+    imageAlt: "Yale Math Competitions poster with graph paper splash design",
+  },
+  {
+    title: "Yale Hunter",
+    tag: "FALL 2025",
+    description:
+      "Final project for CPSC 1001, made with my friends Carmen, Eden, and Johnny!",
+    imageSrc: "/images/fun/yale-hunter.png",
+    imageAlt: "Pixel art Yale Hunter game screenshot",
+  },
+  {
+    title: "Yale Supreme Court Advocacy Clinic",
+    tag: "SPRING 2026",
+    description: "Facing my biggest fears of illustrations by making logos.",
+    imageSrc: "/images/fun/yale-supreme-court.png",
+    imageAlt: "Yale Supreme Court Advocacy Clinic logo with iguana",
+  },
+  {
+    title: "Elise's Website",
+    tag: "SUMMER 2026",
+    description: "Commission website designed and built for my friend Elise",
+    imageSrc: "/images/fun/kyurinas.png",
+    imageAlt: "Elise commission website hero with lace frame and social links",
+  },
 ];
+
+function useColumnCount() {
+  const [columns, setColumns] = useState(3);
+
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth < 640) setColumns(1);
+      else setColumns(3);
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return columns;
+}
 
 export default function Fun() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const columnCount = useColumnCount();
 
   useGSAP(
     () => {
@@ -107,43 +125,43 @@ export default function Fun() {
     >
       <header className="flex flex-col gap-1 py-4">
         <h1
-          className="fun-hero-title title-1 w-full"
+          className="fun-hero-title narrative-1 w-full"
           style={{ color: "var(--color-primary)" }}
         >
-          I just be doing stuff as long as it&apos;s creative.
+          <span className="drop-cap-inline">
+            <span className="drop-cap-letter" aria-hidden="true">
+              C
+            </span>
+            <span className="drop-cap-body">
+              reative stuff I do, for{" "}
+              <span className="drop-cap-clear-mobile">whatever reason.</span>
+            </span>
+          </span>
         </h1>
-        <p
-          className="fun-hero-subtitle max-w-[487px] text-[16px] tracking-[-0.8px]"
-          style={{
-            fontFamily: "var(--font-Alte-Haas-Grotesk)",
-            color: "var(--color-accent)",
-          }}
-        >
-          Featuring posters, zines, and even motion design work from high school
-          and middle school :0
-        </p>
+        <p className="fun-hero-subtitle text-left w-full">Work in Progress.</p>
       </header>
 
-      <div className="flex flex-col gap-8 p-2.5 lg:flex-row lg:gap-8">
-        {FUN_COLUMNS.map((column, columnIndex) => (
-          <div
-            key={columnIndex}
-            className="flex min-w-0 flex-1 flex-col gap-8"
-          >
-            {column.map((project) => (
-              <FunProjectCard
-                key={`${columnIndex}-${project.title}-${project.tag}`}
-                title={project.title}
-                tag={project.tag}
-                description={project.description}
-                imageSrc={project.imageSrc}
-                imageAlt={project.imageAlt}
-                placeholderHeight={project.placeholderHeight}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      <section className="w-full overflow-hidden pb-4 pt-2">
+        <Masonry
+          items={FUN_PROJECTS}
+          columnCount={columnCount}
+          columnGutter={16}
+          rowGutter={16}
+          itemKey={(project, index) =>
+            `${project.title}-${project.tag}-${index}`
+          }
+          render={({ data }) => (
+            <FunProjectCard
+              title={data.title}
+              tag={data.tag}
+              description={data.description}
+              imageSrc={data.imageSrc}
+              imageAlt={data.imageAlt}
+              placeholderHeight={data.placeholderHeight}
+            />
+          )}
+        />
+      </section>
     </div>
   );
 }

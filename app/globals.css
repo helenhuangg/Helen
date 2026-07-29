@@ -120,7 +120,7 @@
   font-size: clamp(2rem, 18.5263px + 1.75439vw, 3rem);
   font-style: normal;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.25;
   letter-spacing: -0.05em;
   color: var(--color-secondary);
 }
@@ -128,56 +128,63 @@
 /* Mobile-first: drop cap base styles */
 .drop-cap::first-letter {
   font-family: var(--font-imperial-script);
-  font-size: clamp(3.5rem, 14vw, 4.5rem);
+  font-size: clamp(3rem, 11vw, 4.5rem);
   font-style: normal;
   font-weight: 400;
   float: left;
-  line-height: 0.95;
+  line-height: 0.85;
   margin-right: 0.08em;
-  margin-top: -0.14em;
+  margin-top: -0.1em;
   color: var(--color-primary);
 }
 
-/* On mobile, span clears float so second line aligns to left edge */
-.drop-cap-clear-mobile {
-  display: inline;
+/* Span-based drop cap — bottom of letter aligns with text */
+.drop-cap-inline {
+  display: inline-flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  column-gap: 0;
+}
+
+.drop-cap-letter {
+  font-family: var(--font-imperial-script);
+  font-size: clamp(2.75rem, 9vw, 4.25rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  margin-right: 0.05em;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.drop-cap-body {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .drop-cap-letter {
+    font-size: clamp(3.5rem, 36px + 3vw, 5.5rem);
+  }
 }
 
 @media (max-width: 1023px) {
   .drop-cap-clear-mobile {
     display: block;
-    clear: left;
+    margin-top: 0.15em;
   }
+}
+
+.drop-cap-clear-mobile {
+  display: inline;
 }
 
 @media (min-width: 1024px) {
   .drop-cap::first-letter {
     font-size: clamp(4rem, 36px + 3.5vw, 6rem);
     margin-right: 0.06em;
-    margin-top: -0.22em;
+    margin-top: 0.12em;
     line-height: 1;
   }
-}
-
-/* Span-based drop cap (Shopify Editions style) - use when ::first-letter doesn't work */
-.drop-cap-inline {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-}
-
-.drop-cap-letter {
-  font-family: var(--font-imperial-script);
-  font-size: clamp(4rem, 36px + 3.5vw, 6rem);
-  font-style: normal;
-  font-weight: 400;
-  line-height: 0.9;
-  margin-right: 0.08em;
-  color: var(--color-primary);
-}
-
-.drop-cap-aligned::first-letter {
-  margin-top: 0.06em;
 }
 
 .number {
@@ -223,19 +230,27 @@
 .hero-caption-emphasis {
   color: var(--color-primary);
   font-family: var(--font-Adobe-Caslon-Pro);
-  font-size: 18px;
+  font-size: 19px;
   font-style: italic;
   font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.35px;
+  font-synthesis: weight;
 }
 
 .hero-stack {
   --hero-wordmark-half: calc(min(740px, 76vw) * 232 / 1004 / 2);
+  --hero-content-width: min(42rem, calc(100vw - 2rem));
 }
 
 .hero-copy {
   top: calc(50% + var(--hero-wordmark-half) + 1rem);
+  width: 100%;
+  max-width: var(--hero-content-width);
+}
+
+.hero-links {
+  width: 100%;
 }
 
 .footnote {

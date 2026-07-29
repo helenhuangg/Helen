@@ -256,7 +256,7 @@ const Home = () => {
         <div className="flex w-full flex-col gap-0">
           <div
             ref={heroBgRef}
-            className="hero-bg flex min-h-[100dvh] w-full justify-center px-4 lg:px-[6vw]"
+            className="hero-bg relative flex min-h-[100dvh] w-full justify-center px-4 lg:px-[6vw]"
           >
             <div className="hero-stack relative h-[100dvh] w-full max-w-[min(1004px,calc(100vw-2rem))]">
               <div className="hero-wordmark absolute left-1/2 top-1/2 z-10 w-full -translate-x-1/2 -translate-y-1/2">
@@ -290,7 +290,7 @@ const Home = () => {
                     </svg>
                 </Magnetic>
               </div>
-              <ul className="hero-copy absolute left-1/2 flex w-full max-w-[42rem] -translate-x-1/2 flex-col items-center gap-0 text-center">
+              <ul className="hero-copy absolute left-1/2 flex -translate-x-1/2 flex-col items-center gap-0 text-center">
                   <li className="w-full">
                     <p className="hero-caption mx-auto max-w-[42rem] text-center">
                       Currently studying
@@ -312,44 +312,44 @@ const Home = () => {
                     </p>
                   </li>
                 </ul>
-
-              <section className="hero-links absolute inset-x-0 bottom-0 flex w-full items-center justify-between pb-8">
-                <div className="flex items-center gap-3">
-                  <a
-                    href="mailto:helen.huang@example.com"
-                    className="footnote"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    email
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/hailuen"
-                    className="footnote"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    linkedin
-                  </a>
-                  <a
-                    href="https://www.github.com/helenhuangg"
-                    className="footnote"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    github
-                  </a>
-                </div>
-                <div>
-                  <a
-                    href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
-                    className="footnote"
-                  >
-                    resume :D
-                  </a>
-                </div>
-              </section>
             </div>
+
+            <section className="hero-links absolute inset-x-0 bottom-0 flex w-full items-center justify-between px-4 pb-8 lg:px-[6vw]">
+              <div className="flex items-center gap-3">
+                <a
+                  href="mailto:helen.huang@example.com"
+                  className="footnote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  email
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/hailuen"
+                  className="footnote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  linkedin
+                </a>
+                <a
+                  href="https://www.github.com/helenhuangg"
+                  className="footnote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  github
+                </a>
+              </div>
+              <div>
+                <a
+                  href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
+                  className="footnote"
+                >
+                  resume :D
+                </a>
+              </div>
+            </section>
           </div>
 
           <div className="hero-divider w-full px-4 lg:px-[6vw] py-8 flex justify-center">

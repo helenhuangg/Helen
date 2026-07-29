@@ -31,13 +31,18 @@ export default function About() {
   return (
     <div
       ref={containerRef}
-      className="w-full min-h-screen pt-[10vh] px-4 lg:px-[6vw] flex flex-col items-start"
+      className="w-full min-h-screen pt-[calc(5rem+5vh)] px-4 lg:px-[6vw] flex flex-col items-start"
     >
       <h1
-        className="about-title narrative-1 drop-cap w-full"
+        className="about-title narrative-1 w-full"
         style={{ color: "var(--color-primary)" }}
       >
-        More about me.
+        <span className="drop-cap-inline">
+          <span className="drop-cap-letter" aria-hidden="true">
+            M
+          </span>
+          <span className="drop-cap-body">ore about me.</span>
+        </span>
       </h1>
       <p className="about-subtitle text-left w-full">Work in Progress.</p>
     </div>

@@ -68,6 +68,8 @@ const alteHaasGrotesk = localFont({
 const adobeCaslonPro = localFont({
   src: "./fonts/adobe-caslon-pro-italic.ttf",
   variable: "--font-Adobe-Caslon-Pro",
+  style: "italic",
+  weight: "400",
 });
 
 const hwCigars = localFont({
