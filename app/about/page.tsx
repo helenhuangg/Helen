@@ -107,6 +107,15 @@ export default function About() {
         delay: 0.5,
         ease: "power2.out",
       });
+      gsap.from(".about-paragraph", {
+        opacity: 0,
+        filter: "blur(4px)",
+        y: 16,
+        duration: 0.5,
+        delay: 0.6,
+        stagger: 0.12,
+        ease: "power2.out",
+      });
     },
     { scope: containerRef },
   );
@@ -133,7 +142,7 @@ export default function About() {
               </h1>
               <p className="about-subtitle text-left w-full">
                 Currently studying abroad @{" "}
-                <span className="subtitle-emphasis">Sogang</span>. Incoming
+                <span className="subtitle-emphasis">Sogang</span>. Rising
                 Sophomore @ <span className="subtitle-emphasis">Yale</span>.
               </p>
             </div>
@@ -143,18 +152,18 @@ export default function About() {
               className="about-video mx-auto w-full object-contain sm:max-w-[24rem] lg:hidden"
             />
 
-            <p className="text-[var(--color-primary)]">
+            <p className="about-paragraph text-[var(--color-primary)]">
               I’m an interdisciplinary designer with a ton of love for motion
               graphics, storytelling, and design engineering. Currently in my
               second year studying Computing and the Arts @ Yale University.
             </p>
-            <p className="text-[var(--color-primary)]">
+            <p className="about-paragraph text-[var(--color-primary)]">
               Ever since I was little, I’ve been involved in design-adjacent
               communities and participating in making things to see people
               smile. I enjoy creating products to enhance lives and
               understanding how people, tech, and art can make an impact.
             </p>
-            <p className="text-[var(--color-primary)]">
+            <p className="about-paragraph text-[var(--color-primary)]">
               When I’m not on my 15 hour Figma streak you can find me getting
               boba with friends and taking pictures of anything and everything.
             </p>
