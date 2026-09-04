@@ -76,7 +76,7 @@ const FIND_ME = [
   {
     label: "resume",
     value: "→",
-    href: "https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view",
+    href: "https://drive.google.com/file/d/1pSQv6oYWgAKggDZ_Z5LegXw_tSoMkCXx/view?usp=sharing",
   },
 ];
 

@@ -343,7 +343,7 @@ const Home = () => {
               </div>
               <div>
                 <a
-                  href="https://drive.google.com/file/d/15W1KgXSmgshSexg-WWLzFOE5tVucscPn/view"
+                  href="https://drive.google.com/file/d/1pSQv6oYWgAKggDZ_Z5LegXw_tSoMkCXx/view?usp=sharing"
                   className="footnote"
                 >
                   resume :D
