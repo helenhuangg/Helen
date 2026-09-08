@@ -199,25 +199,96 @@
   letter-spacing: -0.8px;
 }
 
-.hero-caption {
-  color: var(--color-accent);
+/* Home hero lockup — pixel clover beside the wordmark, with the copy indented
+   to the wordmark's left edge. The mark width drives that indent. */
+.hero-lockup {
+  --hero-mark: clamp(2.75rem, 4.6vw, 4.125rem);
+  --hero-mark-gap: clamp(0.625rem, 1vw, 0.9375rem);
+  width: 100%;
+  /* 561px = 66 mark + 15 gap + 480 wordmark, matching the Figma lockup. */
+  max-width: 561px;
+}
+
+.hero-lockup-mark {
+  width: var(--hero-mark);
+}
+
+/* The clover is 42x40, so its rendered height is 0.95 of --hero-mark; the
+   wordmark sits a touch above that and takes its width from the viewBox. */
+.hero-lockup-wordmark {
+  height: calc(var(--hero-mark) * 1.35);
+}
+
+/* Work filter pills — the selected tag fills, the rest read as quiet labels. */
+.work-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  color: #b0bfcc;
   font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: 16px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.8px;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
-.hero-caption-emphasis {
-  color: var(--color-primary);
-  font-family: var(--font-Adobe-Caslon-Pro);
-  font-size: 19px;
-  font-style: italic;
-  font-weight: 500;
+.work-filter-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: currentColor;
+}
+
+.work-filter:hover {
+  color: var(--color-secondary);
+}
+
+.work-filter-active,
+.work-filter-active:hover {
+  background-color: #b0bfcc;
+  color: var(--color-background);
+}
+
+.hero-lockup-body {
+  padding-left: calc(var(--hero-mark) + var(--hero-mark-gap));
+}
+
+.hero-tagline {
+  max-width: 27.25rem;
+  color: var(--color-secondary);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: clamp(0.9375rem, 1.3vw, 1.1127rem);
+  font-style: normal;
+  font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.35px;
-  font-synthesis: weight;
+  letter-spacing: -0.5341px;
+}
+
+.hero-credential {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgb(50 60 69 / 0.75);
+  font-family: var(--font-eb-garamond);
+  font-size: clamp(1.0625rem, 1.45vw, 1.25rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -1px;
+  font-feature-settings:
+    "swsh" 1,
+    "dlig" 1;
+}
+
+.hero-credential-accent {
+  color: var(--color-primary);
 }
 
 /* Inline emphasis inside body copy — Caslon runs small, so it's bumped up
@@ -230,21 +301,6 @@
   font-weight: 500;
   letter-spacing: -0.35px;
   font-synthesis: weight;
-}
-
-.hero-stack {
-  --hero-wordmark-half: calc(min(740px, 76vw) * 232 / 1004 / 2);
-  --hero-content-width: min(42rem, calc(100vw - 2rem));
-}
-
-.hero-copy {
-  top: calc(50% + var(--hero-wordmark-half) + 1rem);
-  width: 100%;
-  max-width: var(--hero-content-width);
-}
-
-.hero-links {
-  width: 100%;
 }
 
 .footnote {
@@ -279,31 +335,49 @@
 
 .nav-link {
   position: relative;
-  color: var(--color-primary);
-  font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: var(--color-secondary);
+  font-family: var(--font-dm-mono);
+  font-size: 13px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.8px;
+  letter-spacing: -0.65px;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
 }
 
+/* Border lives on the overlay so it never shifts the row, and fades in rather
+   than animating width — a 0 to 1px growth has no in-between frames. */
 .nav-link::after {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 1px;
-  background-color: var(--color-primary);
-  transform: scaleX(0);
-  transform-origin: right;
+  inset: 0;
+  border: 1px solid var(--color-secondary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.nav-link-label {
+  display: inline-block;
   transition: transform 0.3s ease;
 }
 
+.nav-link:hover {
+  color: var(--color-primary);
+}
+
 .nav-link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+  opacity: 1;
+}
+
+.nav-link:hover .nav-link-label {
+  transform: scale(0.92);
 }
 
 .cardTitle {

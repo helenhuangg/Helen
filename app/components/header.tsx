@@ -1,89 +1,62 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+import useSfx from "./useSfx";
 
-gsap.registerPlugin(ScrollToPlugin);
+gsap.registerPlugin(ScrollToPlugin, ScrollTrigger, ScrollSmoother);
+
+const NAV_LINKS = [
+  { href: "/", label: "Work" },
+  { href: "/fun", label: "Fragments" },
+  { href: "/about", label: "About" },
+];
+
+const RESUME_URL =
+  "https://drive.google.com/file/d/1pSQv6oYWgAKggDZ_Z5LegXw_tSoMkCXx/view?usp=sharing";
 
 const Header = () => {
   const showAnimRef = useRef<gsap.core.Tween | null>(null);
   const pathname = usePathname();
-  const router = useRouter();
-
-  const scrollToSection = useCallback(
-    (sectionId: string) => {
-      if (pathname === "/") {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const { ScrollSmoother } = require("gsap/ScrollSmoother");
-          const smoother = ScrollSmoother.get();
-          if (smoother) {
-            smoother.scrollTo(el, false);
-          } else {
-            const wrapper = document.getElementById("smooth-wrapper");
-            if (wrapper) {
-              const y = el.getBoundingClientRect().top + wrapper.scrollTop - 80;
-              wrapper.scrollTo({ top: y, behavior: "smooth" });
-            } else {
-              el.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-          }
-        }
-      } else {
-        router.push("/?scrollTo=" + sectionId);
-      }
-    },
-    [pathname, router],
-  );
+  const playSelectSfx = useSfx("/audio/select.mp3");
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 1023px)").matches;
-    if (isMobile) {
-      // On mobile: keep header always visible (scroll hide/show is unreliable with smooth-wrapper)
-      gsap.set("header", { yPercent: 0 });
-      return;
-    }
 
     const showAnim = gsap
       .from("header", {
         yPercent: -100,
         paused: true,
-        duration: 0.2,
+        duration: 0.25,
       })
       .progress(1);
 
     showAnimRef.current = showAnim;
 
-    let touchStartY = 0;
-
-    const onWheel = (e: WheelEvent) => {
-      e.deltaY > 10 ? showAnim.reverse() : e.deltaY < -10 && showAnim.play();
-    };
-
-    const onTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      const delta = e.touches[0].clientY - touchStartY;
-      if (Math.abs(delta) < 10) return;
-      delta > 0 ? showAnim.reverse() : showAnim.play();
-      touchStartY = e.touches[0].clientY;
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: true });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    // On mobile the page scrolls inside #smooth-wrapper; on desktop
+    // ScrollSmoother drives the window scroll.
+    const trigger = ScrollTrigger.create({
+      scroller: isMobile ? "#smooth-wrapper" : undefined,
+      start: 0,
+      end: "max",
+      onUpdate: (self) => {
+        if (self.scroll() < 40) {
+          showAnim.play();
+          return;
+        }
+        if (self.direction === 1) showAnim.reverse();
+        else showAnim.play();
+      },
+    });
 
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
+      trigger.kill();
       showAnim.kill();
     };
   }, []);
@@ -94,23 +67,49 @@ const Header = () => {
     }
   }, [pathname]);
 
+  // Next skips navigation when the href matches the current route, which would
+  // otherwise leave you parked mid-page.
+  const handleNavClick =
+    (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      playSelectSfx();
+      if (href !== pathname) return;
+
+      event.preventDefault();
+      const smoother = ScrollSmoother.get();
+      if (smoother) {
+        smoother.scrollTo(0, true);
+        return;
+      }
+      const wrapper = document.getElementById("smooth-wrapper");
+      if (wrapper) wrapper.scrollTo({ top: 0, behavior: "smooth" });
+      else window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
   return (
     <header className="fixed w-full flex items-center justify-between px-4 lg:px-[6vw] py-[1.5vw] z-100">
-      <Link href="/" className="cursor-pointer">
-        <Image src="/clover.svg" alt="Clover Logo" width={38} height={36} />
-      </Link>
-
-      <nav className="flex items-center gap-6">
-        <button className="nav-link" onClick={() => scrollToSection("work")}>
-          Work
-        </button>
-        <Link href="/fun" className="nav-link">
-          Fun
-        </Link>
-        <Link href="/about" className="nav-link">
-          About
-        </Link>
+      {/* Negative margins pull the label padding back so text sits on the page gutter. */}
+      <nav className="flex items-center gap-2 -ml-[10px]">
+        {NAV_LINKS.map((link) => (
+          <Link
+            key={link.label}
+            href={link.href}
+            className="nav-link"
+            onClick={handleNavClick(link.href)}
+          >
+            <span className="nav-link-label">{link.label}</span>
+          </Link>
+        ))}
       </nav>
+
+      <a
+        href={RESUME_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="nav-link -mr-[10px]"
+        onClick={playSelectSfx}
+      >
+        <span className="nav-link-label">Resume</span>
+      </a>
     </header>
   );
 };
