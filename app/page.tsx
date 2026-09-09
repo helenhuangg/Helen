@@ -234,6 +234,22 @@ const Home = () => {
       ease: "power2.out",
     });
 
+    // fromTo, not from: the effect can run twice in dev, and a second `from`
+    // would treat the offset start as the resting position.
+    gsap.fromTo(
+      ".work-filter",
+      { opacity: 0, y: 10 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.45,
+        delay: heroDuration - 0.25,
+        stagger: 0.09,
+        ease: "power2.out",
+        clearProps: "transform",
+      },
+    );
+
     if (skipHeroAnimations) return;
 
     SplitText.create(".caption", {
@@ -271,7 +287,7 @@ const Home = () => {
             ref={heroBgRef}
             className="hero-bg relative flex min-h-[50vh] w-full justify-start px-4 pb-16 sm:pb-0 lg:px-[6vw]"
           >
-            <div className="hero-stack relative flex h-[50vh] w-full max-w-[min(1004px,calc(100vw-2rem))] items-start pt-[calc(5rem+10vh)]">
+            <div className="hero-stack relative flex min-h-[50vh] w-full max-w-[min(1004px,calc(100vw-2rem))] items-start pt-[calc(5rem+10vh)] pb-8">
               <div className="hero-lockup flex flex-col gap-[15px]">
                 <div className="flex items-center gap-[var(--hero-mark-gap)]">
                 <img

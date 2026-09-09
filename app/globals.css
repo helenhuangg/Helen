@@ -236,7 +236,8 @@
   white-space: nowrap;
   transition:
     background-color 0.3s ease,
-    color 0.3s ease;
+    color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .work-filter-dot {
@@ -244,10 +245,19 @@
   height: 6px;
   border-radius: 9999px;
   background-color: currentColor;
+  transition: transform 0.3s ease;
 }
 
 .work-filter:hover {
   color: var(--color-secondary);
+}
+
+.work-filter:hover .work-filter-dot {
+  transform: scale(1.5);
+}
+
+.work-filter:active {
+  transform: scale(0.94);
 }
 
 .work-filter-active,
@@ -258,6 +268,14 @@
 
 .hero-lockup-body {
   padding-left: calc(var(--hero-mark) + var(--hero-mark-gap));
+}
+
+/* On phones the copy is inset under the wordmark, so mirror that inset on the
+   right to keep the text block evenly framed. */
+@media (max-width: 639px) {
+  .hero-lockup-body {
+    padding-right: calc(var(--hero-mark) + var(--hero-mark-gap));
+  }
 }
 
 .hero-tagline {
