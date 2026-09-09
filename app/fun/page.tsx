@@ -133,14 +133,14 @@ export default function Fun() {
         >
           <span className="drop-cap-inline">
             <span className="drop-cap-letter" aria-hidden="true">
-              C
+              A
             </span>
-            <span className="drop-cap-body">
-              reative stuff I do, for whatever reason.
-            </span>
+            <span className="drop-cap-body">lways a work in progress.</span>
           </span>
         </h1>
-        <p className="fun-hero-subtitle text-left w-full">Work in Progress.</p>
+        <p className="fun-hero-subtitle text-left w-full">
+          designs i make for my beloved school orgs, friends, and myself
+        </p>
       </header>
 
       <section className="w-full overflow-hidden pb-4 pt-2">

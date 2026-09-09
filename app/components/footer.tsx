@@ -56,7 +56,7 @@ export default function Footer() {
     >
       <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
         <p className="footer-tagline">
-          Made with the thought of the jasmine milk tea my mom makes
+          Made with the thought of the jasmine milk tea and Next.js
         </p>
 
         <div className="flex gap-x-14">
