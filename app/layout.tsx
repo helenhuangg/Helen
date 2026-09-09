@@ -10,6 +10,7 @@ import "./globals.css";
 import SmoothScroll from "./components/ScrollSmooth";
 import { PreloaderProvider } from "./components/PreloaderContext";
 import Footer from "./components/footer";
+import MusicToggle from "./components/MusicToggle";
 
 export const metadata: Metadata = {
   title: "Helen Huang",
@@ -101,6 +102,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <SmoothScroll />
           </Suspense>
           <Header />
+          <MusicToggle />
           <div
             id="smooth-wrapper"
             style={{

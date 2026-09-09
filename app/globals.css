@@ -386,6 +386,64 @@
   transition: transform 0.3s ease;
 }
 
+/* Mirrors the nav links: a border that fades in and a slight shrink on hover. */
+.music-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--color-secondary);
+  transition: color 0.3s ease;
+}
+
+.music-toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-secondary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.music-toggle:hover {
+  color: var(--color-primary);
+}
+
+.music-toggle:hover::after {
+  opacity: 1;
+}
+
+/* The icons are masked rather than inlined so they take the theme color. */
+.music-toggle-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  transition: transform 0.3s ease;
+}
+
+.music-toggle:hover .music-toggle-icon {
+  transform: scale(0.92);
+}
+
+.music-toggle-icon-on {
+  mask-image: url("/images/icons/sound-on.svg");
+  -webkit-mask-image: url("/images/icons/sound-on.svg");
+}
+
+.music-toggle-icon-off {
+  mask-image: url("/images/icons/sound-off.svg");
+  -webkit-mask-image: url("/images/icons/sound-off.svg");
+}
+
 .nav-link:hover {
   color: var(--color-primary);
 }
@@ -396,6 +454,106 @@
 
 .nav-link:hover .nav-link-label {
   transform: scale(0.92);
+}
+
+/* About page */
+.about-heading {
+  color: var(--color-primary);
+  font-family: var(--font-eb-garamond);
+  font-size: clamp(2.25rem, 3.3vw, 3rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -2.4px;
+  font-feature-settings:
+    "swsh" 1,
+    "dlig" 1;
+}
+
+.about-lede {
+  color: var(--color-secondary);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 17.803px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.5341px;
+}
+
+/* The strip height drives every photo's width, so the row keeps the design's
+   proportions and lands at exactly 173px on a 1440px screen. */
+.about-strip {
+  --strip-height: clamp(120px, 12vw, 173px);
+}
+
+.about-photo {
+  height: var(--strip-height);
+}
+
+.about-photo-caption {
+  color: rgb(107 117 127 / 0.75);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  transition:
+    left 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* The divider is a textured brush stroke exported from the design, not a
+   hairline — it stretches to the column width the way it does in Figma. */
+.about-rule {
+  width: 100%;
+  height: 2px;
+  border: 0;
+  background: url("/images/about/rule.svg") center / 100% 100% no-repeat;
+}
+
+.about-body,
+.about-note {
+  color: var(--color-secondary);
+  font-family: var(--font-eb-garamond);
+  font-size: 17.803px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.5341px;
+}
+
+.about-org-name {
+  color: var(--color-primary);
+  font-family: var(--font-eb-garamond);
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -1.4px;
+  font-feature-settings:
+    "swsh" 1,
+    "dlig" 1;
+}
+
+.about-org-role {
+  color: var(--color-secondary);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
+}
+
+.about-org-dates {
+  color: rgb(107 117 127 / 0.75);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.42px;
 }
 
 .footer-tagline {
