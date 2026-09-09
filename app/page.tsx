@@ -8,7 +8,6 @@ import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import ProjectCard from "./components/projectCard";
 import useSfx from "./components/useSfx";
-import { Magnetic } from "@/components/animate-ui/primitives/effects/magnetic";
 import dynamic from "next/dynamic";
 
 const Masonry = dynamic(
@@ -297,11 +296,6 @@ const Home = () => {
                   className="hero-lockup-mark h-auto shrink-0"
                 />
                 <div className="hero-lockup-wordmark min-w-0">
-                <Magnetic
-                  strength={0.1}
-                  range={300}
-                  style={{ display: "block", height: "100%" }}
-                >
                   <svg
                     className="larger-title block h-full w-auto"
                     viewBox="0 0 1004 232"
@@ -325,7 +319,6 @@ const Home = () => {
                         fill="var(--color-primary)"
                       />
                     </svg>
-                </Magnetic>
                 </div>
                 </div>
 
