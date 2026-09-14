@@ -18,8 +18,8 @@ const HERO_VIDEO_SRC = "";
 const DEMO_YOUTUBE_ID = "95AB5zyNXjE";
 
 const NAV_SECTIONS = [
-  { id: "the-problem", label: "Problem" },
   { id: "role-breakdown", label: "My Role" },
+  { id: "the-problem", label: "Problem" },
   { id: "the-research", label: "The Research" },
   { id: "the-solution", label: "The Solution" },
   { id: "product", label: "The Features" },
@@ -100,7 +100,11 @@ export default function Libra() {
       const sections = gsap.utils.toArray<HTMLElement>(".work-section");
       const isMobile = window.matchMedia("(max-width: 1023px)").matches;
       const skipIds = new Set(["the-research", "reflection"]);
-      const scroller = isMobile ? "#smooth-wrapper" : undefined;
+      // Pass the element, not a selector — useGSAP scopes strings to
+      // contentRef, and #smooth-wrapper lives outside it.
+      const scroller = isMobile
+        ? document.getElementById("smooth-wrapper") ?? undefined
+        : undefined;
 
       if (isMobile) {
         gsap.set(sections, { opacity: 1, y: 0 });
@@ -176,6 +180,20 @@ export default function Libra() {
         />
 
         <WorkSection
+          id="role-breakdown"
+          label="ROLE BREAKDOWN"
+          headline="My Responsibilities"
+        >
+          <p>
+            I worked on building out the visual identity and shape assets for
+            the project, and collaborated closely with the team on wire-framing
+            and prototyping. I also designed the Figma presentation slides and
+            added small animations to the demo video to give it a bit of extra
+            polish! Such a fun experience!
+          </p>
+        </WorkSection>
+
+        <WorkSection
           id="the-problem"
           label="THE PROBLEM"
           headline="Alysa's ankle has been compensating for months without her realizing it. She figured that was just part of being an athlete."
@@ -187,20 +205,6 @@ export default function Libra() {
             it into view. Even then, it&apos;s often written off as mental —
             nerves, a bad day — rather than something that can be measured and
             rebuilt into a new sense
-          </p>
-        </WorkSection>
-
-        <WorkSection
-          id="role-breakdown"
-          label="ROLE BREAKDOWN"
-          headline="My Responsibilities"
-        >
-          <p>
-            I worked on building out the visual identity and shape assets for
-            the project, and collaborated closely with the team on wire-framing
-            and prototyping. I also designed the Figma presentation slides and
-            added small animations to the demo video to give it a bit of extra
-            polish! Such a fun experience!
           </p>
         </WorkSection>
 
