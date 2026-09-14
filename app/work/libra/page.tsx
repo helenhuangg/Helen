@@ -280,18 +280,11 @@ export default function Libra() {
               headline={section.headline}
             >
               <p>{section.copy}</p>
-              {"video" in section && section.video ? (
-                <ScrollPlayVideo
-                  src={section.video}
-                  className="w-full rounded-[14px] object-cover"
-                  controls
-                />
-              ) : (
-                <WorkMediaSlot
-                  label={section.slot}
-                  heightClass="aspect-video min-h-[280px]"
-                />
-              )}
+              <ScrollPlayVideo
+                src={section.video}
+                className="w-full rounded-[14px] object-cover"
+                controls
+              />
             </WorkSection>
           ))}
         </div>
