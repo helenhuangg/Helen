@@ -558,7 +558,7 @@
 
 .footer-tagline {
   max-width: 17rem;
-  color: #fff;
+  color: rgb(239 240 240 / 0.82);
   font-family: var(--font-eb-garamond);
   font-size: clamp(1.5rem, 2.2vw, 1.75rem);
   font-style: normal;

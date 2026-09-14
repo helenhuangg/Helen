@@ -96,7 +96,7 @@ export default function WorkNav({ sections }: WorkNavProps) {
   }, [mounted, sections]);
 
   const handleBack = () => {
-    router.push("/?scrollTo=work");
+    router.push("/");
   };
 
   const BackArrow = () => (

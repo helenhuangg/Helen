@@ -9,15 +9,17 @@ gsap.registerPlugin(SplitText);
 interface WorkHeaderProps {
   subtitle: string;
   title: string;
-  image: string;
-  alt: string;
+  image?: string;
+  alt?: string;
+  videoSrc?: string;
 }
 
 export default function WorkHeader({
   subtitle,
   title,
   image,
-  alt,
+  alt = "",
+  videoSrc,
 }: WorkHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null);
 
@@ -89,7 +91,18 @@ export default function WorkHeader({
       </div>
 
       <div className="wh-hero w-full rounded-[20px] overflow-hidden aspect-video opacity-0">
-        <img src={image} alt={alt} className="w-full h-full object-cover" />
+        {videoSrc ? (
+          <video
+            src={videoSrc}
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        ) : image ? (
+          <img src={image} alt={alt} className="h-full w-full object-cover" />
+        ) : null}
       </div>
     </div>
   );

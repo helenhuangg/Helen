@@ -50,7 +50,7 @@ const projects = [
     description: "FigBuild 2026",
     tags: ["Product"],
     image: "/images/libra1.png",
-    hoverImage: "/images/libra2.png",
+    hoverImage: "/images/libra_thumbnail.png",
     href: "/work/libra",
   },
 ];
