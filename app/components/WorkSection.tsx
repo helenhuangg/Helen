@@ -18,18 +18,14 @@ export default function WorkSection({
   return (
     <section
       id={id}
-      className={`work-section flex flex-col gap-4 items-start py-[10px] w-full ${className ?? ""}`}
+      className={`work-section flex flex-col gap-2 items-start py-[10px] w-full ${className ?? ""}`}
     >
-      {(label || headline) && (
-        <div className="flex flex-col items-start gap-1">
-          {label && (
-            <h5 className="callout" style={{ color: "var(--color-highlight)" }}>
-              {label}
-            </h5>
-          )}
-          {headline && <h4 className="headline">{headline}</h4>}
-        </div>
+      {label && (
+        <h5 className="callout" style={{ color: "var(--color-highlight)" }}>
+          {label}
+        </h5>
       )}
+      {headline && <h4 className="headline">{headline}</h4>}
       {children}
     </section>
   );

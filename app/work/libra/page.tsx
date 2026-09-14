@@ -66,7 +66,7 @@ const PRODUCT_SECTIONS = [
   {
     id: "profile",
     headline: "Profile",
-    copy: "Your app, made easy.",
+    copy: "Surfaces environmental conditions in plain language like dropping pressure or rising humidity, so users know what to expect from their body today, alongside their fall risk score and daily challenge.",
     slot: "Profile screens",
     video: "/videos/profile_1.mp4",
   },
@@ -103,7 +103,7 @@ export default function Libra() {
       // Pass the element, not a selector — useGSAP scopes strings to
       // contentRef, and #smooth-wrapper lives outside it.
       const scroller = isMobile
-        ? document.getElementById("smooth-wrapper") ?? undefined
+        ? (document.getElementById("smooth-wrapper") ?? undefined)
         : undefined;
 
       if (isMobile) {
@@ -160,7 +160,7 @@ export default function Libra() {
 
       <div
         ref={contentRef}
-        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[calc(6vw+10rem+0.75rem)] lg:pr-[6vw]"
+        className="flex flex-col gap-[10px] items-start p-[10px] px-6 lg:pl-[calc(6vw+10rem+0.75rem)] lg:pr-[6vw]"
       >
         <WorkHeader
           subtitle="FIGBUILD 2026"
@@ -319,16 +319,12 @@ export default function Libra() {
             {LEARNINGS.map((learning) => (
               <div
                 key={learning}
-                className="libra-learning rounded-[15px] border px-7 py-7"
+                className="libra-learning rounded-[15px] px-7 py-7"
                 style={{
                   backgroundColor: "#d4dbe3",
-                  borderColor: "var(--color-accent)",
                 }}
               >
-                <p
-                  className="!text-[16px] !leading-normal !tracking-[-0.5px]"
-                  style={{ fontFamily: "var(--font-Alte-Haas-Grotesk)" }}
-                >
+                <p className="!text-[16px] !leading-[140%] !tracking-[-0.2px]">
                   {learning}
                 </p>
               </div>

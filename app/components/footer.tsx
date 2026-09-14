@@ -48,7 +48,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="w-full px-4 lg:px-[6vw] pt-[52px] pb-[36px]"
+      className="w-full px-6 lg:px-[6vw] pt-[52px] pb-[36px]"
       style={{
         backgroundColor: "var(--color-primary)",
         color: "var(--color-background)",
@@ -56,7 +56,7 @@ export default function Footer() {
     >
       <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
         <p className="footer-tagline">
-          Made with the thought of the jasmine milk tea and Next.js
+          Made with the thought of the jasmine milk tea my mom makes and Next.js!
         </p>
 
         <div className="flex gap-x-14">

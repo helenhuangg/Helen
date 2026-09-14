@@ -89,11 +89,27 @@ const hwCigars = localFont({
   variable: "--font-hw-cigars",
 });
 
+const louize = localFont({
+  src: [
+    {
+      path: "./fonts/subset-Louize.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/subset-Louize-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+  ],
+  variable: "--font-louize",
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html style={{ height: "100%" }}>
       <body
-        className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable} ${hwCigars.variable} ${imperialScript.variable}`}
+        className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable} ${hwCigars.variable} ${imperialScript.variable} ${louize.variable}`}
         style={{ margin: 0, height: "100%" }}
         suppressHydrationWarning
       >

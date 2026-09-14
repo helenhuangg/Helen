@@ -97,6 +97,18 @@
   color: var(--color-primary);
 }
 
+#reflection p {
+  font-family: var(--font-louize);
+  letter-spacing: -0.2px;
+  line-height: 140%;
+}
+
+#reflection .subheadline2 {
+  font-family: var(--font-Alte-Haas-Grotesk);
+  letter-spacing: -0.8px;
+  line-height: normal;
+}
+
 .subheadline {
   font-family: var(--font-Alte-Haas-Grotesk);
   font-size: 20px;

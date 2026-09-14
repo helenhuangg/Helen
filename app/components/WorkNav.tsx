@@ -138,7 +138,7 @@ export default function WorkNav({ sections }: WorkNavProps) {
     return (
       <>
         <div
-          className="fixed left-0 top-0 z-[9998] w-full px-4 pt-4 transition-opacity duration-200 ease-out"
+          className="fixed left-0 top-0 z-[9998] w-full px-6 pt-4 transition-opacity duration-200 ease-out"
           style={{
             top: 56,
             paddingTop: "max(16px, env(safe-area-inset-top))",
@@ -148,8 +148,9 @@ export default function WorkNav({ sections }: WorkNavProps) {
         >
           <button
             onClick={handleBack}
-            className="flex items-center justify-center px-[5px] text-[13px] tracking-[-0.65px] whitespace-nowrap cursor-pointer font-[family-name:var(--font-dm-mono)]"
+            className="flex items-center justify-center px-2 py-0.5 text-[13px] tracking-[-0.65px] whitespace-nowrap cursor-pointer font-[family-name:var(--font-dm-mono)]"
             style={{
+              backgroundColor: "var(--color-background)",
               color: "var(--color-primary)",
             }}
           >

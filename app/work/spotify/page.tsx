@@ -56,7 +56,7 @@ export default function Spotify() {
 
       <div
         ref={contentRef}
-        className="flex flex-col gap-[10px] items-start p-[10px] px-4 lg:pl-[calc(6vw+10rem+0.75rem)] lg:pr-[6vw]"
+        className="flex flex-col gap-[10px] items-start p-[10px] px-6 lg:pl-[calc(6vw+10rem+0.75rem)] lg:pr-[6vw]"
       >
         <WorkHeader
           subtitle="FALL 2024"

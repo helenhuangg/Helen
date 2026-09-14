@@ -9,11 +9,11 @@ interface WorkInfoBarProps {
 
 export default function WorkInfoBar({ items }: WorkInfoBarProps) {
   return (
-    <div className="flex items-start w-full p-[10px]">
+    <div className="flex w-full flex-col items-start gap-5 py-[10px] lg:flex-row lg:gap-0">
       {items.map((item) => (
         <div
           key={item.label}
-          className="flex-1 flex flex-col gap-1 items-start"
+          className="flex w-full flex-col gap-1 items-start lg:flex-1 lg:w-auto"
         >
           <span
             className="text-[10px] tracking-[-0.5px] uppercase px-[10px] py-[2px]"

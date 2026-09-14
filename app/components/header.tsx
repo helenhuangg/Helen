@@ -86,7 +86,7 @@ const Header = () => {
     };
 
   return (
-    <header className="fixed w-full flex items-center justify-between px-4 lg:px-[6vw] py-[1.5vw] z-100">
+    <header className="fixed w-full flex items-center justify-between px-6 lg:px-[6vw] py-[1.5vw] z-100">
       {/* Negative margins pull the label padding back so text sits on the page gutter. */}
       <nav className="flex items-center gap-2 -ml-[10px]">
         {NAV_LINKS.map((link) => (
