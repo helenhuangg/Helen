@@ -4,6 +4,7 @@ import { DM_Mono } from "next/font/google";
 import { EB_Garamond } from "next/font/google";
 import { Zhi_Mang_Xing } from "next/font/google";
 import { Imperial_Script } from "next/font/google";
+import Script from "next/script";
 import { ReactNode, Suspense } from "react";
 import Header from "./components/header";
 import "./globals.css";
@@ -108,6 +109,20 @@ const louize = localFont({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html style={{ height: "100%" }}>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-S99XVVSMSP"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-S99XVVSMSP');
+          `}
+        </Script>
+      </head>
       <body
         className={`${retrogression.variable} ${ebGaramond.variable} ${alteHaasGrotesk.variable} ${adobeCaslonPro.variable} ${zhiMangXing.variable} ${dmMono.variable} ${hwCigars.variable} ${imperialScript.variable} ${louize.variable}`}
         style={{ margin: 0, height: "100%" }}
