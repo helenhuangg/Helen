@@ -12,10 +12,7 @@ const NAV_LINKS = [
 const SOCIAL_LINKS = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/hailuen" },
   { label: "GitHub", href: "https://www.github.com/helenhuangg" },
-  {
-    label: "Resume",
-    href: "https://drive.google.com/file/d/1pSQv6oYWgAKggDZ_Z5LegXw_tSoMkCXx/view?usp=sharing",
-  },
+  { label: "Resume", href: "/Helen_Huang_Resume.pdf" },
 ];
 
 const LAST_UPDATED = "Wed Sep 9 2026";

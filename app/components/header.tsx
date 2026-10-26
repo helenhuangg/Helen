@@ -18,8 +18,7 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
 ];
 
-const RESUME_URL =
-  "https://drive.google.com/file/d/1pSQv6oYWgAKggDZ_Z5LegXw_tSoMkCXx/view?usp=sharing";
+const RESUME_URL = "/Helen_Huang_Resume.pdf";
 
 const Header = () => {
   const showAnimRef = useRef<gsap.core.Tween | null>(null);
