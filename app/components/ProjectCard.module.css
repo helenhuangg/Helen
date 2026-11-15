@@ -1,0 +1,22 @@
+.soon {
+  cursor: default;
+}
+
+.media {
+  position: relative;
+}
+
+.soonMedia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .soonMedia:hover::after {
+    background: rgb(0 0 0 / 0.4);
+  }
+}

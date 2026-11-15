@@ -1,66 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
 
-const NAV_LINKS = [
+const GARDEN_LINKS = [
   { label: "Work", href: "/" },
-  { label: "Fragments", href: "/fun" },
+  { label: "Crafts", href: "/fun" },
   { label: "About", href: "/about" },
 ];
 
-const SOCIAL_LINKS = [
+const SAY_HI_LINKS = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/hailuen" },
   { label: "GitHub", href: "https://www.github.com/helenhuangg" },
   { label: "Resume", href: "/Helen_Huang_Resume.pdf" },
 ];
 
-const LAST_UPDATED = "Wed Sep 9 2026";
-
-function useCurrentTime() {
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    const format = () =>
-      new Date()
-        .toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: true,
-          timeZone: "America/New_York",
-        })
-        .replace(" ", "")
-        .toLowerCase();
-
-    setTime(format());
-    const interval = setInterval(() => setTime(format()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return time;
-}
+const LAST_UPDATED = "9/25/2026";
 
 export default function Footer() {
-  const time = useCurrentTime();
-
   return (
-    <footer
-      className="w-full px-6 lg:px-[6vw] pt-[52px] pb-[36px]"
-      style={{
-        backgroundColor: "var(--color-primary)",
-        color: "var(--color-background)",
-      }}
-    >
-      <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
-        <p className="footer-tagline">
-          Made with the thought of the jasmine milk tea my mom makes and Next.js!
-        </p>
+    <footer className="relative w-full overflow-hidden px-6 pb-9 pt-[110px] lg:px-[min(215px,15vw)]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-[-10%] bottom-0 h-[280px] bg-[#b3bfcb] blur-[48px]"
+      />
 
-        <div className="flex gap-x-14">
+      <div className="relative flex flex-col gap-16 sm:flex-row sm:items-start sm:justify-between">
+        <p className="footer-tagline">Continue making for what feels right.</p>
+
+        <div className="flex gap-[69px]">
           <div>
-            <p className="footer-heading mb-[14px]">Pages</p>
-            <ul className="flex flex-col gap-[14px]">
-              {NAV_LINKS.map((link) => (
+            <p className="footer-heading mb-[17px]">Garden</p>
+            <ul className="flex flex-col gap-[17px]">
+              {GARDEN_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link href={link.href} className="footer-link">
                     {link.label}
@@ -71,9 +42,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="footer-heading mb-[14px]">Find me</p>
-            <ul className="flex flex-col gap-[14px]">
-              {SOCIAL_LINKS.map((link) => (
+            <p className="footer-heading mb-[17px]">Say hi</p>
+            <ul className="flex flex-col gap-[17px]">
+              {SAY_HI_LINKS.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
@@ -90,10 +61,11 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="footer-meta mt-16 sm:mt-[112px]">
-        {/* Rendered client-side, so the first paint has no time to show yet. */}
-        <p>{time ? `Currently ${time} in New Haven, Connecticut` : "\u00a0"}</p>
-        <p>Last updated on {LAST_UPDATED}</p>
+      <div className="relative mt-16 flex flex-col gap-3 sm:mt-24 sm:flex-row sm:items-end sm:justify-between">
+        <p className="footer-meta">
+          © 2026 Helen Huang, last updated: {LAST_UPDATED}
+        </p>
+        <p className="footer-meta">made with lots of thoughts & matchas</p>
       </div>
     </footer>
   );

@@ -1,11 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import styles from "./MusicToggle.module.css";
 
 const TRACK_SRC = "/audio/ambient.mp3";
 
+const BARS = [
+  { x: 0.5, dur: "0.85s", begin: "0s" },
+  { x: 4.9, dur: "0.68s", begin: "0.12s" },
+  { x: 9.3, dur: "1s", begin: "0.24s" },
+] as const;
+
 /**
- * Floating mute toggle for the background track. It starts silent because
+ * Header mute toggle for the background track. It starts silent because
  * browsers block sound until the page has been interacted with, and pausing
  * keeps the playhead so unmuting resumes where it left off.
  */
@@ -37,10 +44,8 @@ export default function MusicToggle() {
       return;
     }
 
-    void audio
-      .play()
-      .then(() => setPlaying(true))
-      .catch(() => setPlaying(false));
+    setPlaying(true);
+    void audio.play().catch(() => setPlaying(false));
   };
 
   return (
@@ -49,14 +54,55 @@ export default function MusicToggle() {
       onClick={toggle}
       aria-pressed={playing}
       aria-label={playing ? "Mute background music" : "Play background music"}
-      className="music-toggle fixed bottom-6 right-4 z-100 lg:right-[6vw]"
+      className={`${styles.toggle} ${playing ? styles.playing : ""}`}
     >
-      <span
+      <svg
+        className={styles.eq}
+        width="12"
+        height="14"
+        viewBox="0 0 12 14"
         aria-hidden
-        className={`music-toggle-icon ${
-          playing ? "music-toggle-icon-on" : "music-toggle-icon-off"
-        }`}
-      />
+      >
+        {BARS.map((bar) =>
+          playing ? (
+            <rect
+              key={bar.x}
+              x={bar.x}
+              y="1"
+              width="2.2"
+              height="12"
+              rx="1.1"
+              fill="currentColor"
+            >
+              <animate
+                attributeName="height"
+                values="3.2;12;3.2"
+                dur={bar.dur}
+                begin={bar.begin}
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="y"
+                values="9.8;1;9.8"
+                dur={bar.dur}
+                begin={bar.begin}
+                repeatCount="indefinite"
+              />
+            </rect>
+          ) : (
+            <circle
+              key={bar.x}
+              cx={bar.x + 1.1}
+              cy="12"
+              r="1.1"
+              fill="currentColor"
+            />
+          ),
+        )}
+      </svg>
+      <span className="max-sm:sr-only">
+        {playing ? "Sound on" : "Sound off"}
+      </span>
     </button>
   );
 }

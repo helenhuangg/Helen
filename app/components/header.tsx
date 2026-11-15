@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import React from "react";
@@ -9,24 +9,34 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import useSfx from "./useSfx";
+import MusicToggle from "./MusicToggle";
+import styles from "./HeaderMenu.module.css";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger, ScrollSmoother);
 
 const NAV_LINKS = [
   { href: "/", label: "Work" },
-  { href: "/fun", label: "Fragments" },
+  { href: "/fun", label: "Craft" },
   { href: "/about", label: "About" },
-];
+] as const;
 
-const RESUME_URL = "/Helen_Huang_Resume.pdf";
+const WORK_PAGES = [
+  { href: "/work/yhack", label: "YHack 2026" },
+  { href: "/work/libra", label: "Libra" },
+  { href: "/work/yale-clubs", label: "YaleClubs", ready: false },
+  { href: "/work/adobe", label: "Adobe", ready: false },
+] as const;
 
 const Header = () => {
   const showAnimRef = useRef<gsap.core.Tween | null>(null);
+  const menuOpenRef = useRef(false);
   const pathname = usePathname();
   const playSelectSfx = useSfx("/audio/select.mp3");
+  const [menuOpen, setMenuOpen] = useState(false);
+  menuOpenRef.current = menuOpen;
 
   useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+    const isTouch = window.matchMedia("(max-width: 1023px)").matches;
 
     const showAnim = gsap
       .from("header", {
@@ -38,14 +48,12 @@ const Header = () => {
 
     showAnimRef.current = showAnim;
 
-    // On mobile the page scrolls inside #smooth-wrapper; on desktop
-    // ScrollSmoother drives the window scroll.
     const trigger = ScrollTrigger.create({
-      scroller: isMobile ? "#smooth-wrapper" : undefined,
+      scroller: isTouch ? "#smooth-wrapper" : undefined,
       start: 0,
       end: "max",
       onUpdate: (self) => {
-        if (self.scroll() < 40) {
+        if (menuOpenRef.current || self.scroll() < 40) {
           showAnim.play();
           return;
         }
@@ -64,13 +72,24 @@ const Header = () => {
     if (showAnimRef.current) {
       showAnimRef.current.play();
     }
+    setMenuOpen(false);
   }, [pathname]);
 
-  // Next skips navigation when the href matches the current route, which would
-  // otherwise leave you parked mid-page.
+  useEffect(() => {
+    const wrapper = document.getElementById("smooth-wrapper");
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      if (wrapper) wrapper.style.overflow = "hidden";
+      return;
+    }
+    document.body.style.overflow = "";
+    if (wrapper) wrapper.style.overflow = "";
+  }, [menuOpen]);
+
   const handleNavClick =
     (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
       playSelectSfx();
+      setMenuOpen(false);
       if (href !== pathname) return;
 
       event.preventDefault();
@@ -84,32 +103,128 @@ const Header = () => {
       else window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-  return (
-    <header className="fixed w-full flex items-center justify-between px-6 lg:px-[6vw] py-[1.5vw] z-100">
-      {/* Negative margins pull the label padding back so text sits on the page gutter. */}
-      <nav className="flex items-center gap-2 -ml-[10px]">
-        {NAV_LINKS.map((link) => (
-          <Link
-            key={link.label}
-            href={link.href}
-            className="nav-link"
-            onClick={handleNavClick(link.href)}
-          >
-            <span className="nav-link-label">{link.label}</span>
-          </Link>
-        ))}
-      </nav>
+  const toggleMenu = () => {
+    playSelectSfx();
+    setMenuOpen((open) => !open);
+  };
 
-      <a
-        href={RESUME_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="nav-link -mr-[10px]"
-        onClick={playSelectSfx}
+  return (
+    <>
+      <header className="fixed top-0 z-[10000] w-full px-6 py-[18px] lg:px-[min(215px,15vw)]">
+        <div className="flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]">
+          <Link
+            href="/"
+            className="justify-self-start"
+            onClick={handleNavClick("/")}
+          >
+            <img src="/images/home/header-clover.svg" alt="Helen Huang" />
+          </Link>
+          <nav className="hidden items-center gap-4 md:flex lg:gap-[26px]">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                aria-current={pathname === link.href ? "page" : undefined}
+                className="home-nav-link"
+                onClick={handleNavClick(link.href)}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2 md:justify-self-end">
+            <MusicToggle />
+            <button
+              type="button"
+              className={styles.menuBtn}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              onClick={toggleMenu}
+            >
+              {menuOpen ? "Close" : "Menu"}
+            </button>
+          </div>
+        </div>
+      </header>
+      <nav
+        id="mobile-menu"
+        className={`${styles.overlay} ${menuOpen ? styles.overlayOpen : ""}`}
+        aria-hidden={!menuOpen}
       >
-        <span className="nav-link-label">Resume</span>
-      </a>
-    </header>
+        <div className={styles.pages}>
+          {NAV_LINKS.map((link) => {
+            const isWorkLink = link.href === "/";
+            const onWorkPage = pathname.startsWith("/work/");
+            const isCurrent =
+              isWorkLink
+                ? pathname === "/" || onWorkPage
+                : pathname === link.href;
+
+            if (isWorkLink && onWorkPage) {
+              return (
+                <div key={link.label} className={styles.group}>
+                  <Link
+                    href={link.href}
+                    aria-current="page"
+                    className={styles.page}
+                    onClick={handleNavClick(link.href)}
+                    tabIndex={menuOpen ? 0 : -1}
+                  >
+                    {link.label}
+                  </Link>
+                  <div className={styles.tree}>
+                    {WORK_PAGES.map((project) => {
+                      const isReady = !("ready" in project) || project.ready;
+                      const isProjectCurrent = pathname === project.href;
+
+                      if (!isReady) {
+                        return (
+                          <span
+                            key={project.href}
+                            className={`${styles.project} ${styles.projectSoon}`}
+                            aria-disabled="true"
+                          >
+                            {project.label}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <Link
+                          key={project.href}
+                          href={project.href}
+                          aria-current={
+                            isProjectCurrent ? "page" : undefined
+                          }
+                          className={styles.project}
+                          onClick={handleNavClick(project.href)}
+                          tabIndex={menuOpen ? 0 : -1}
+                        >
+                          {project.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                aria-current={isCurrent ? "page" : undefined}
+                className={styles.page}
+                onClick={handleNavClick(link.href)}
+                tabIndex={menuOpen ? 0 : -1}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 };
 

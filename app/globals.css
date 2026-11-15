@@ -19,7 +19,7 @@
   --color-secondary: #6b757f;
   --color-accent: #778ba4;
   --color-highlight: #b3bfcb;
-  --color-background: #eff0f0;
+  --color-background: #f7f7f7;
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -211,114 +211,167 @@
   letter-spacing: -0.8px;
 }
 
-/* Home hero lockup — pixel clover beside the wordmark, with the copy indented
-   to the wordmark's left edge. The mark width drives that indent. */
-.hero-lockup {
-  --hero-mark: clamp(2.75rem, 4.6vw, 4.125rem);
-  --hero-mark-gap: clamp(0.625rem, 1vw, 0.9375rem);
-  width: 100%;
-  /* 561px = 66 mark + 15 gap + 480 wordmark, matching the Figma lockup. */
-  max-width: 561px;
-}
-
-.hero-lockup-mark {
-  width: var(--hero-mark);
-}
-
-/* The clover is 42x40, so its rendered height is 0.95 of --hero-mark; the
-   wordmark sits a touch above that and takes its width from the viewBox. */
-.hero-lockup-wordmark {
-  height: calc(var(--hero-mark) * 1.35);
-}
-
-/* Work filter pills — the selected tag fills, the rest read as quiet labels. */
-.work-filter {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  cursor: pointer;
-  color: #b0bfcc;
+.hero-bio {
+  color: var(--color-secondary);
   font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.28px;
+}
+
+.hero-bio-em {
+  color: #1a2e3f;
+}
+
+.hero-bio-em-soft {
+  color: #374a5c;
+}
+
+.find-me-label {
+  color: #304353;
+  font-family: var(--font-dm-mono);
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  white-space: nowrap;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    transform 0.2s ease;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
-.work-filter-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background-color: currentColor;
-  transition: transform 0.3s ease;
-}
-
-.work-filter:hover {
-  color: var(--color-secondary);
-}
-
-.work-filter:hover .work-filter-dot {
-  transform: scale(1.5);
-}
-
-.work-filter:active {
-  transform: scale(0.94);
-}
-
-.work-filter-active,
-.work-filter-active:hover {
-  background-color: #b0bfcc;
-  color: var(--color-background);
-}
-
-.hero-lockup-body {
-  padding-left: calc(var(--hero-mark) + var(--hero-mark-gap));
-}
-
-/* On phones the copy is inset under the wordmark, so mirror that inset on the
-   right to keep the text block evenly framed. */
-@media (max-width: 639px) {
-  .hero-lockup-body {
-    padding-right: calc(var(--hero-mark) + var(--hero-mark-gap));
-  }
-}
-
-.hero-tagline {
-  max-width: 27.25rem;
+.find-me-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
   color: var(--color-secondary);
   font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: clamp(0.9375rem, 1.3vw, 1.1127rem);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.28px;
+  transition: color 0.3s ease;
+}
+
+.find-me-link:hover {
+  color: var(--color-primary);
+}
+
+.work-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  color: var(--color-primary);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 17.803px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   letter-spacing: -0.5341px;
+  white-space: nowrap;
+  opacity: 0.58;
+  filter: blur(1.6px);
+  transition:
+    opacity 0.3s ease,
+    filter 0.3s ease;
 }
 
-.hero-credential {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: rgb(50 60 69 / 0.75);
+.work-filter-active,
+.work-filter:hover {
+  opacity: 1;
+  filter: none;
+}
+
+.home-nav-link {
+  position: relative;
+  display: inline-block;
+  color: var(--color-secondary);
+  font-family: var(--font-dm-mono);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-bottom: 3px;
+  transition: color 0.3s ease;
+}
+
+.home-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background-image: radial-gradient(
+    circle,
+    currentColor 0.85px,
+    transparent 0.95px
+  );
+  background-size: 5px 4px;
+  background-repeat: repeat-x;
+  background-position: left center;
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+  transition: clip-path 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-nav-link:hover,
+.home-nav-link[aria-current="page"] {
+  color: var(--color-primary);
+}
+
+.home-nav-link:hover::after {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-nav-link::after {
+    transition: none;
+  }
+}
+
+.home-card-title {
+  color: var(--color-primary);
   font-family: var(--font-eb-garamond);
-  font-size: clamp(1.0625rem, 1.45vw, 1.25rem);
+  font-size: 18px;
   font-style: normal;
   font-weight: 400;
   line-height: 1.14;
-  letter-spacing: -1px;
+  letter-spacing: -0.7px;
   font-feature-settings:
     "swsh" 1,
     "dlig" 1;
 }
 
-.hero-credential-accent {
-  color: var(--color-primary);
+.home-card-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 2px 6px;
+  background-color: var(--color-highlight);
+  color: #f7f7f7;
+  font-family: var(--font-dm-mono);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.home-card-copy {
+  color: var(--color-secondary);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.26px;
 }
 
 /* Inline emphasis inside body copy — Caslon runs small, so it's bumped up
@@ -396,64 +449,6 @@
 .nav-link-label {
   display: inline-block;
   transition: transform 0.3s ease;
-}
-
-/* Mirrors the nav links: a border that fades in and a slight shrink on hover. */
-.music-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  cursor: pointer;
-  color: var(--color-secondary);
-  transition: color 0.3s ease;
-}
-
-.music-toggle::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--color-secondary);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.music-toggle:hover {
-  color: var(--color-primary);
-}
-
-.music-toggle:hover::after {
-  opacity: 1;
-}
-
-/* The icons are masked rather than inlined so they take the theme color. */
-.music-toggle-icon {
-  display: block;
-  width: 18px;
-  height: 18px;
-  background-color: currentColor;
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  transition: transform 0.3s ease;
-}
-
-.music-toggle:hover .music-toggle-icon {
-  transform: scale(0.92);
-}
-
-.music-toggle-icon-on {
-  mask-image: url("/images/icons/sound-on.svg");
-  -webkit-mask-image: url("/images/icons/sound-on.svg");
-}
-
-.music-toggle-icon-off {
-  mask-image: url("/images/icons/sound-off.svg");
-  -webkit-mask-image: url("/images/icons/sound-off.svg");
 }
 
 .nav-link:hover {
@@ -569,38 +564,43 @@
 }
 
 .footer-tagline {
-  max-width: 17rem;
-  color: rgb(239 240 240 / 0.82);
+  max-width: 16.5rem;
+  color: var(--color-secondary);
   font-family: var(--font-eb-garamond);
-  font-size: clamp(1.5rem, 2.2vw, 1.75rem);
+  font-size: 22px;
   font-style: normal;
   font-weight: 400;
-  line-height: 1.3;
-  letter-spacing: -0.4px;
+  line-height: 1.14;
+  letter-spacing: -0.7px;
+  font-feature-settings:
+    "swsh" 1,
+    "dlig" 1;
 }
 
 .footer-heading {
-  font-family: var(--font-dm-mono);
-  font-size: 13px;
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.65px;
+  line-height: 1.14;
+  letter-spacing: -0.7px;
   text-transform: uppercase;
-  opacity: 0.45;
+  opacity: 0.54;
+  color: var(--color-secondary);
 }
 
 .footer-link {
   position: relative;
   display: inline-block;
   font-family: var(--font-dm-mono);
-  font-size: 13px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.65px;
+  letter-spacing: 0;
   text-transform: uppercase;
-  opacity: 0.75;
+  color: var(--color-secondary);
+  opacity: 0.9;
   transition: opacity 0.3s ease;
 }
 
@@ -627,13 +627,16 @@
 }
 
 .footer-meta {
-  font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: 13px;
+  font-family: var(--font-eb-garamond);
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 1.45;
-  letter-spacing: -0.4px;
-  opacity: 0.6;
+  line-height: 1.14;
+  letter-spacing: -0.7px;
+  color: var(--color-secondary);
+  font-feature-settings:
+    "swsh" 1,
+    "dlig" 1;
 }
 
 .cardTitle {
