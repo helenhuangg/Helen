@@ -116,9 +116,10 @@
         for(const q of clouds)density+=q.w*Math.exp(-((xx-q.x)**2+(yy-q.y)**2)/(q.r*q.r));
         density=Math.min(1,density*.52);
         const grain=random();const mottling=.72+.2*Math.sin(xx*24+Math.sin(yy*16))+ .1*Math.cos(yy*47+xx*9);
-        const alpha=density*(.13+grain*.22)*mottling*(grain<.1?.13:1);
+        const alpha=density*(.1+grain*.16)*mottling*(grain<.1?.13:1);
         const i=(y*620+x)*4;
-        data.data[i]=115+Math.floor(random()*25);data.data[i+1]=179+Math.floor(random()*27);data.data[i+2]=201+Math.floor(random()*22);
+        // Slate wash toward site accent/highlight (#778ba4 / #b3bfcb), not cyan.
+        data.data[i]=119+Math.floor(random()*50);data.data[i+1]=139+Math.floor(random()*42);data.data[i+2]=164+Math.floor(random()*32);
         data.data[i+3]=Math.round(alpha*255);
       }
       c.putImageData(data,0,0);p.texture=texture;
@@ -142,13 +143,13 @@
               if(side===1&&j===0)c.moveTo(xx,yy);else c.lineTo(xx,yy);
             }
           }
-          c.closePath();c.fillStyle=`rgba(116,185,207,${alpha/(edge+2)})`;c.fill();
+          c.closePath();c.fillStyle=`rgba(119,139,164,${alpha/(edge+2)})`;c.fill();
           // Dry-brush pinholes and bristle fragments across the pigment ribbon.
           const random=rng(seed+part*2+edge*.1);
           for(let grain=0;grain<85;grain++) {
             const a=start+random()*span;
             const rr=r*(1+.045*Math.sin(3*a+seed)+.016*Math.sin(11*a-seed))+(random()-.5)*width*2;
-            c.fillStyle=`rgba(252,254,253,${alpha*.75})`;
+            c.fillStyle=`rgba(247,247,247,${alpha*.75})`;
             c.fillRect(x+Math.cos(a)*rr,y+Math.sin(a)*rr*.91,.6+random()*1.6,.4+random());
           }
         }
@@ -159,7 +160,7 @@
           const xx=x+Math.cos(a)*rr,yy=y+Math.sin(a)*rr*.91;
           j?c.lineTo(xx,yy):c.moveTo(xx,yy);
         }
-        c.strokeStyle=`rgba(255,255,255,${alpha*.85})`;c.lineWidth=1.4;c.stroke();
+        c.strokeStyle=`rgba(247,247,247,${alpha*.85})`;c.lineWidth=1.4;c.stroke();
       }
     }
     petal(x,y,size,angle,alpha,pink=false) {
@@ -167,7 +168,7 @@
       c.beginPath();c.moveTo(0,-size);
       c.bezierCurveTo(size*.9,-size*.75,size*.75,size*.35,0,size);
       c.bezierCurveTo(-size*.65,size*.2,-size*.8,-size*.6,0,-size);
-      c.fillStyle=`rgba(${pink?'249,231,240':'255,255,253'},${alpha})`;c.fill();c.restore();
+      c.fillStyle=`rgba(${pink?'214,220,228':'247,247,247'},${alpha})`;c.fill();c.restore();
     }
     fish(x,y,angle,time,alpha,f) {
       const c=this.ctx;c.save();c.translate(x,y);c.rotate(angle);
@@ -186,7 +187,7 @@
           const t=side===1?j/55:1-j/55;const q=body(t,side,layer);
           side===1&&j===0?c.moveTo(...q):c.lineTo(...q);
         }
-        c.closePath();c.fillStyle=`rgba(${f.hue>.5?'95,155,181':'104,174,181'},${alpha*.19})`;c.fill();
+        c.closePath();c.fillStyle=`rgba(${f.hue>.5?'80,95,110':'119,139,164'},${alpha*.19})`;c.fill();
       }
       // Loose trailing filaments; some tails divide and some remain a single gesture.
       for(let k=0;k<(f.split?3:1);k++) {
@@ -197,14 +198,14 @@
           const yy=(center(t)+(k-1)*.07*Math.sin((t-.55)*2))*f.length;
           j?c.lineTo(xx,yy):c.moveTo(xx,yy);
         }
-        c.strokeStyle=`rgba(103,167,185,${alpha*.26})`;c.lineWidth=.5+k*.2;c.stroke();
+        c.strokeStyle=`rgba(107,117,127,${alpha*.26})`;c.lineWidth=.5+k*.2;c.stroke();
       }
       c.beginPath();c.moveTo(-f.length*.2,center(.45)*f.length);
       c.quadraticCurveTo(-f.length*.65,-f.length*f.fin,-f.length*.8,center(.7)*f.length);
-      c.fillStyle=`rgba(135,186,195,${alpha*.2})`;c.fill();
+      c.fillStyle=`rgba(179,191,203,${alpha*.2})`;c.fill();
       for(let j=0;j<120;j++) {
         const t=random(),q=body(t,(random()*2-1),0);
-        c.fillStyle=`rgba(251,254,252,${alpha*(.15+random()*.6)})`;
+        c.fillStyle=`rgba(247,247,247,${alpha*(.15+random()*.6)})`;
         c.fillRect(q[0],q[1],.4+random(),.4+random()*.7);
       }
       c.restore();
@@ -212,7 +213,7 @@
     draw() {
       const c=this.ctx;if(!c||!this.w)return;
       c.clearRect(0,0,this.w,this.h);
-      const strength=.9*clamp(Number(this.getAttribute('intensity')||1),0,2);
+      const strength=.68*clamp(Number(this.getAttribute('intensity')||1),0,2);
       for(const p of this.puddles) {
         const age=this.motion.matches?14:this.time-p.born;
         const fade=clamp(age/5,0,1)*(p.retire===undefined?1:clamp(1-(this.time-p.retire)/(p.fadeDuration||10),0,1))*strength;
@@ -254,7 +255,7 @@
         for(let k=0;k<10;k++) {
           const a=k*2.4+p.seed,rr=radius*(.4+(k%3)*.17);
           c.beginPath();c.arc(x+Math.cos(a)*rr,y+Math.sin(a)*rr, .7+(k%3)*.5,0,TAU);
-          c.fillStyle=`rgba(255,255,245,${fade*.75})`;c.fill();
+          c.fillStyle=`rgba(247,247,247,${fade*.65})`;c.fill();
         }
       }
       // Pointer feedback begins immediately, then opens into broken brush ripples.
