@@ -10,6 +10,7 @@ import useSfx from "./components/useSfx";
 import Preloader from "./components/preloader";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import findMe from "./components/FindMe.module.css";
+import PuddleBackground from "./components/PuddleBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -215,6 +216,7 @@ const Home = () => {
           }}
         />
       )}
+      {!loading && <PuddleBackground />}
       <div
         className={`transition-opacity duration-500 ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
       >
