@@ -1,173 +1,164 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import dynamic from "next/dynamic";
-import FunProjectCard from "@/app/components/FunProjectCard";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import styles from "./page.module.css";
 
-const Masonry = dynamic(
-  () => import("masonic").then((mod) => ({ default: mod.Masonry })),
-  { ssr: false },
-) as unknown as typeof import("masonic").Masonry;
-
-type FunProject = {
+type Project = {
   title: string;
-  tag: string;
-  description: string;
-  imageSrc?: string;
-  imageAlt?: string;
-  placeholderHeight?: number;
+  year?: string;
+  image?: string;
+  video?: string;
+  poster?: string;
   href?: string;
 };
 
-const FUN_PROJECTS: FunProject[] = [
+const collections: { id: string; title: string; projects: Project[] }[] = [
   {
-    title: "DFA BDD ‘25-26 Stickers",
-    tag: "SPRING 2026",
-    description:
-      "Designing stickers for the very event that introduced me to DFA!",
-    imageSrc: "/images/fun/dfa-bdd-stickers.png",
-    imageAlt: "DFA Bulldog Days sticker sheet in a plastic bag",
+    id: "motion",
+    title: "Motion",
+    projects: [
+      { title: "Spotify Commercial", year: "2024", video: "/videos/spot1.mp4", poster: "/images/fun/motion/spotify.jpg" },
+      { title: "Thanksgiving Food Drive", year: "2024", video: "/videos/Thanksgiving Food Drive Promotional Video.mp4", poster: "/images/fun/motion/thanksgiving-food-drive.jpg" },
+      { title: "Flower Sale Fundraiser", year: "2023", video: "/videos/Flower Sale Fundraiser Promotional Video.mp4", poster: "/images/fun/motion/flower-sale-fundraiser.jpg" },
+      { title: "QuickChews Commercial", year: "2024", video: "/videos/QuickChews Commercial Video.mp4", poster: "/images/fun/motion/quickchews.jpg" },
+      { title: "Job Fair", year: "2023", video: "/videos/D218 Job Fair Promotional Video.mp4", poster: "/images/fun/motion/job-fair.jpg" },
+      { title: "Dog Dish", year: "2024", video: "/videos/Dog Dish Intro.mp4", poster: "/images/fun/motion/dog-dish.jpg" },
+      { title: "Club Corner", year: "2025", video: "/videos/Club Corner Intro.mp4", poster: "/images/fun/motion/club-corner.jpg" },
+    ],
   },
   {
-    title: "Push or Pull?",
-    tag: "FALL 2025",
-    description:
-      "A zine for ART 1782 with a camera rented from Bass and frustrating InDesign",
-    imageSrc: "/images/fun/push-or-pull.png",
-    imageAlt: "Push or Pull zine spread in a binder",
+    id: "websites",
+    title: "Websites & Experiences",
+    projects: [
+      { title: "Virmiu", year: "2026", image: "/images/fun/kyurinas.png", href: "https://virmiu.netlify.app/index.html" },
+      { title: "Yale Africa Start Up Review", year: "2025" },
+      { title: "Yale Hunter", year: "2025", image: "/images/fun/yale-hunter.png", href: "https://github.com/helenhuangg/CPSC1001-Yale-Hunter" },
+    ],
   },
   {
-    title: "Yale Math Competitions",
-    tag: "FALL 2025",
-    description: "Poster re-design for Yale Math Competitions for ART 1782",
-    imageSrc: "/images/fun/yale-math-competitions.png",
-    imageAlt: "Yale Math Competitions poster with graph paper splash design",
-  },
-  {
-    title: "Yale Hunter",
-    tag: "FALL 2025",
-    description:
-      "Final project for CPSC 1001, made with my friends Carmen, Eden, and Johnny!",
-    imageSrc: "/images/fun/yale-hunter.png",
-    imageAlt: "Pixel art Yale Hunter game screenshot",
-    href: "https://github.com/helenhuangg/CPSC1001-Yale-Hunter",
-  },
-  {
-    title: "Yale Supreme Court Advocacy Clinic",
-    tag: "SPRING 2026",
-    description: "Facing my biggest fears of illustrations by making logos.",
-    imageSrc: "/images/fun/yale-supreme-court.png",
-    imageAlt: "Yale Supreme Court Advocacy Clinic logo with iguana",
-  },
-  {
-    title: "Elise's Website",
-    tag: "SUMMER 2026",
-    description: "Commission website designed and built for my friend Elise",
-    imageSrc: "/images/fun/kyurinas.png",
-    imageAlt: "Elise commission website hero with lace frame and social links",
-    href: "https://virmiu.netlify.app/index.html",
+    id: "misc",
+    title: "Other Misc.",
+    projects: [
+      { title: "DFA Studio 2026 Launch", year: "2026" },
+      { title: "y/cs Designs", year: "2026" },
+      { title: "Yale Math Competitions", year: "2025", image: "/images/fun/yale-math-competitions.png" },
+      { title: "Push or Pull?", year: "2025", image: "/images/fun/push-or-pull.png" },
+      { title: "DFA Bulldog Days Stickers", year: "2026", image: "/images/fun/dfa-bdd-stickers.png" },
+      { title: "Yale Supreme Court Advocacy Clinic", year: "2026", image: "/images/fun/yale-supreme-court.png" },
+    ],
   },
 ];
 
-function useColumnCount() {
-  const [columns, setColumns] = useState(3);
+function CraftCard({ project }: { project: Project }) {
+  const { title, year, image, video, poster, href } = project;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
-    const update = () => {
-      if (window.innerWidth < 640) setColumns(1);
-      else setColumns(3);
-    };
-
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  return columns;
-}
-
-export default function Fun() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const columnCount = useColumnCount();
-
-  useGSAP(
-    () => {
-      gsap.from(".fun-hero-title", {
-        opacity: 0,
-        filter: "blur(8px)",
-        y: 24,
-        duration: 0.8,
-        ease: "power2.out",
-      });
-      gsap.from(".fun-hero-subtitle", {
-        opacity: 0,
-        filter: "blur(4px)",
-        y: 16,
-        duration: 0.5,
-        delay: 0.3,
-        ease: "power2.out",
-      });
-      gsap.from(".fun-card", {
-        opacity: 0,
-        y: 32,
-        duration: 0.6,
-        stagger: 0.08,
-        delay: 0.35,
-        ease: "power2.out",
-      });
-    },
-    { scope: containerRef },
+  function stopPreview() {
+    videoRef.current?.pause();
+    setPlaying(false);
+  }
+  const content = (
+    <>
+      <div
+        className={styles.media}
+        data-placeholder={!image && !video}
+        onPointerEnter={event => {
+          if (event.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          const preview = videoRef.current;
+          if (preview) void preview.play().catch(() => {});
+        }}
+        onPointerLeave={stopPreview}
+      >
+        {image && <img src={image} alt="" loading="lazy" />}
+        {poster && <img src={poster} alt="" loading="lazy" />}
+        {video && (
+          <video
+            ref={videoRef}
+            data-playing={playing}
+            src={video}
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-hidden="true"
+            onPlaying={() => setPlaying(true)}
+          />
+        )}
+      </div>
+      <div className={styles.caption}>
+        <h3>{title}</h3>
+        {year && <span>{year}</span>}
+      </div>
+    </>
   );
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full min-h-screen pt-[calc(5rem+5vh)] px-4 pb-10 lg:px-[6vw]"
-    >
-      <header className="flex flex-col gap-1 py-4">
-        <h1
-          className="fun-hero-title narrative-1 w-full"
-          style={{ color: "var(--color-primary)" }}
-        >
-          <span className="drop-cap-inline">
-            <span className="drop-cap-letter" aria-hidden="true">
-              A
-            </span>
-            <span className="drop-cap-body">lways a work in progress.</span>
-          </span>
-        </h1>
-        <p className="fun-hero-subtitle text-left w-full">
-          designs i make for my beloved school orgs, friends, and myself
-        </p>
-      </header>
+    <li className={styles.card}>
+      {href?.startsWith("/") ? (
+        <Link href={href} className={styles.cardLink}>{content}</Link>
+      ) : href ? (
+        <a href={href} className={styles.cardLink} target="_blank" rel="noopener noreferrer">{content}</a>
+      ) : content}
+    </li>
+  );
+}
 
-      <section className="w-full overflow-hidden pb-4 pt-2">
-        <Masonry
-          items={FUN_PROJECTS}
-          columnCount={columnCount}
-          columnGutter={16}
-          rowGutter={16}
-          // Scrolling happens inside #smooth-wrapper, not the window, so
-          // masonic's viewport virtualization would never reveal later cards.
-          overscanBy={Infinity}
-          itemKey={(project, index) =>
-            `${project.title}-${project.tag}-${index}`
+function Collection({ id, title, projects }: (typeof collections)[number]) {
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(frame);
+  }, [open]);
+
+  return (
+    <section className={styles.collection}>
+      <h2 className={styles.collectionHeading}>
+        <button
+          className={styles.summary}
+          type="button"
+          aria-expanded={open}
+          aria-controls={`craft-${id}`}
+          onClick={() => setOpen(value => !value)}
+        >
+          {title}
+          <span className={styles.rule} aria-hidden="true" />
+          <Plus className={styles.toggle} size={22} strokeWidth={1.3} aria-hidden="true" />
+        </button>
+      </h2>
+      <div
+        id={`craft-${id}`}
+        className={styles.panel}
+        data-open={open}
+        inert={!open}
+        onTransitionEnd={event => {
+          if (event.target === event.currentTarget && event.propertyName === "grid-template-rows") {
+            ScrollTrigger.refresh();
           }
-          render={({ data }) => (
-            <FunProjectCard
-              title={data.title}
-              tag={data.tag}
-              description={data.description}
-              imageSrc={data.imageSrc}
-              imageAlt={data.imageAlt}
-              placeholderHeight={data.placeholderHeight}
-              href={data.href}
-            />
-          )}
-        />
-      </section>
-    </div>
+        }}
+      >
+        <div className={styles.panelInner}>
+          <ul className={styles.row} data-wide={id !== "misc"} aria-label={`${title} projects`} tabIndex={0}>
+            {projects.map(project => <CraftCard key={project.title} project={project} />)}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function CraftPage() {
+  return (
+    <main className={styles.page}>
+      <div className={styles.intro}>
+        <h1>Crafts</h1>
+        <p>designs i make for my beloved school orgs, friends, and myself</p>
+      </div>
+      {collections.map(collection => <Collection key={collection.id} {...collection} />)}
+    </main>
   );
 }

@@ -110,7 +110,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 z-[10000] w-full px-6 py-[18px] lg:px-[min(215px,15vw)]">
+      <header data-craft={!menuOpen && pathname === "/fun" ? "true" : undefined} data-adaptive-contrast={!menuOpen && pathname.startsWith("/work/") ? "true" : undefined} className="fixed top-0 z-[10000] w-full px-6 py-[18px] lg:px-[min(215px,15vw)]">
         <div className="flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]">
           <Link
             href="/"

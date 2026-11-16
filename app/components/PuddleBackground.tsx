@@ -30,14 +30,18 @@ export default function PuddleBackground() {
 
       const interactive = window.matchMedia(
         "(pointer: fine) and (min-width: 1024px)",
-      ).matches;
-      if (!interactive) puddle.setAttribute("speed", "0.55");
+      );
+      const updateSpeed = () => {
+        puddle.setAttribute("speed", interactive.matches ? "1" : "0.55");
+      };
+      updateSpeed();
+      interactive.addEventListener("change", updateSpeed);
 
       node.appendChild(puddle);
       wrapper.insertBefore(node, wrapper.firstChild);
 
       const onPointer = (event: PointerEvent) => {
-        if (!interactive || event.button !== 0) return;
+        if (!interactive.matches || event.button !== 0) return;
         const rect = puddle.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) return;
         puddle.drop(
@@ -48,6 +52,7 @@ export default function PuddleBackground() {
 
       window.addEventListener("pointerdown", onPointer);
       cleanup = () => {
+        interactive.removeEventListener("change", updateSpeed);
         window.removeEventListener("pointerdown", onPointer);
         node.remove();
       };

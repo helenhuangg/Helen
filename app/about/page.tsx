@@ -103,6 +103,8 @@ export default function About() {
 
   useGSAP(
     () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
       gsap.from(".about-heading", {
         opacity: 0,
         filter: "blur(8px)",

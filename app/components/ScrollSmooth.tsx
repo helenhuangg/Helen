@@ -20,7 +20,7 @@ export default function SmoothScroll() {
       content: "#smooth-content",
       smooth: 2,
       effects: true,
-      normalizeScroll: true,
+      normalizeScroll: { allowNestedScroll: true },
     });
 
     return () => smoother.kill();

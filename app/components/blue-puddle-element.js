@@ -44,12 +44,12 @@
       this.canvas.width = Math.round(this.w*dpr); this.canvas.height = Math.round(this.h*dpr);
       this.ctx.setTransform(dpr,0,0,dpr,0,0); this.draw();
     }
-    reset() { this.puddles = []; this.ripples = []; this.time = 0; this.nextDrop = 0; this.ambientIndex=0; this.draw(); }
+    reset() { this.puddles = []; this.ripples = []; this.time = 0; this.nextDrop = 0; this.draw(); }
     setPaused(value) { this.paused = !!value; this.last = undefined; }
     drop(x=.5,y=.5,ambient=false) {
       x=clamp(x,0,1); y=clamp(y,0,1);
       if(!ambient) {
-        this.nextDrop=this.time+48+Math.random()*8;
+        this.nextDrop=this.time+12+Math.random()*15;
         this.ripples.push({x,y,born:this.time,seed:Math.random()*TAU,speed:36+Math.random()*23,spacing:.3+Math.random()*.35,count:2+Math.floor(Math.random()*2)});
         this.ripples=this.ripples.slice(-5);
       }
@@ -58,7 +58,7 @@
       if(!nearby) {
         const active=this.puddles.filter(p=>p.retire===undefined);
         if(active.length>=2) { active[0].retire=this.time; active[0].fadeDuration=8; }
-        const p={x,y,born:this.time,ambient,expires:this.time+28+Math.random()*6,autoWave:ambient?this.time+10+Math.random()*4:Infinity,seed:Math.random()*TAU,scale:.8+Math.random()*.25};
+        const p={x,y,born:this.time,ambient,expires:this.time+36+Math.random()*24,autoWave:ambient?this.time+10+Math.random()*4:Infinity,seed:Math.random()*TAU,scale:.65+Math.random()*.65};
         this.preparePool(p); this.puddles.push(p);
         this.puddles=this.puddles.slice(-4);
       }
@@ -80,13 +80,14 @@
         this.ripples=this.ripples.filter(r=>this.time-r.born<5);
         this.puddles=this.puddles.filter(p=>p.retire===undefined || this.time-p.retire<(p.fadeDuration||10));
         if(this.time>=this.nextDrop && this.getAttribute('ambient')!=='off') {
-          // Wait for the old wash to disappear; no background buildup.
-          if(!this.puddles.length) {
-            const positions=[[.27,.60],[.76,.67],[.23,.35],[.72,.34]];
-            const index=this.ambientIndex||0;const point=positions[index%positions.length];
-            this.ambientIndex=index+1;
-            this.drop(point[0]+(Math.random()-.5)*.08,point[1]+(Math.random()-.5)*.08,true);
-            this.nextDrop=this.time+46+Math.random()*8;
+          // Let a second wash drift in before the first disappears, with bounded overlap.
+          if(this.puddles.filter(p=>p.retire===undefined).length<2) {
+            // Favor the upper right, with occasional drops elsewhere.
+            const favorUpperRight = Math.random() < 0.75;
+            const x = favorUpperRight ? 0.65 + Math.random() * 0.23 : 0.16 + Math.random() * 0.68;
+            const y = favorUpperRight ? 0.15 + Math.random() * 0.22 : 0.40 + Math.random() * 0.40;
+            this.drop(x, y, true);
+            this.nextDrop=this.time+18+Math.random()*20;
           } else this.nextDrop=this.time+4;
         }
         this.draw();
@@ -96,15 +97,17 @@
     preparePool(p) {
       const random=rng(p.seed);
       p.duration=6+random()*8;p.aspect=.7+random()*.65;p.rotation=random()*TAU;
-      p.breathe=.07+random()*.09;p.ringCount=1+Math.floor(random()*3);
-      p.fish=Array.from({length:2},(_,i)=>({
+      p.breathe=.035+random()*.055;p.ringCount=2+Math.floor(random()*3);
+      p.rings=Array.from({length:p.ringCount},()=>({offset:random()*.08,width:1+random()*3,seed:random()*TAU}));
+      p.mist=Array.from({length:4},()=>({x:(random()-.5)*1.7,y:(random()-.5)*1.4,r:.5+random()*.8,phase:random()*TAU,rate:.025+random()*.04}));
+      p.fish=Array.from({length:1+Math.floor(random()*3)},(_,i)=>({
         seed:random()*TAU,length:18+random()*19,width:.13+random()*.24,
         tail:.7+random()*1.5, bend:.12+random()*.3, phase:random()*TAU,
         speed:.035+random()*.045,beat:.55+random()*1.1,direction:i?1:-1,
         orbit:.27+random()*.27,flatten:.55+random()*.5,hue:random(),
         split:random()>.5, fin:random()*.45
       }));
-      p.petals=Array.from({length:9+Math.floor(random()*7)},()=>({a:random()*TAU,r:.2+random()*.7,size:2+random()*4,rate:.08+random()*.17,phase:random()*TAU}));
+      p.petals=Array.from({length:12+Math.floor(random()*18)},()=>({a:random()*TAU,r:.2+random()*.7,size:2+random()*4,rate:.08+random()*.17,phase:random()*TAU}));
       // Cache a unique pigment field once. Fine grain stays stable, never flickers.
       const texture=document.createElement('canvas');texture.width=texture.height=620;
       const c=texture.getContext('2d'),data=c.createImageData(620,620);
@@ -116,7 +119,7 @@
         for(const q of clouds)density+=q.w*Math.exp(-((xx-q.x)**2+(yy-q.y)**2)/(q.r*q.r));
         density=Math.min(1,density*.52);
         const grain=random();const mottling=.72+.2*Math.sin(xx*24+Math.sin(yy*16))+ .1*Math.cos(yy*47+xx*9);
-        const alpha=density*(.1+grain*.16)*mottling*(grain<.1?.13:1);
+        const alpha=density*(.13+grain*.22)*mottling*(grain<.1?.13:1);
         const i=(y*620+x)*4;
         // Slate wash toward site accent/highlight (#778ba4 / #b3bfcb), not cyan.
         data.data[i]=119+Math.floor(random()*50);data.data[i+1]=139+Math.floor(random()*42);data.data[i+2]=164+Math.floor(random()*32);
@@ -128,8 +131,8 @@
     ring(x,y,r,alpha,seed,width=3) {
       const c=this.ctx;
       for(let part=0;part<3;part++) {
-        const start=seed+part*TAU/3;
-        const span=1.48+.27*Math.sin(seed+part*2);
+        const start=seed+part*TAU/3+.19*Math.sin(seed*3+part*5);
+        const span=1.1+.65*(.5+.5*Math.sin(seed+part*2));
         for(let edge=0;edge<3;edge++) {
           c.beginPath();
           for(let side=1;side>=-1;side-=2) {
@@ -213,20 +216,35 @@
     draw() {
       const c=this.ctx;if(!c||!this.w)return;
       c.clearRect(0,0,this.w,this.h);
-      const strength=.68*clamp(Number(this.getAttribute('intensity')||1),0,2);
+      const strength=.9*clamp(Number(this.getAttribute('intensity')||1),0,2);
       for(const p of this.puddles) {
         const age=this.motion.matches?14:this.time-p.born;
         const fade=clamp(age/5,0,1)*(p.retire===undefined?1:clamp(1-(this.time-p.retire)/(p.fadeDuration||10),0,1))*strength;
-        const growth=.1+.9*(1-Math.exp(-age/p.duration));
+        const growth=.35+.65*(1-Math.exp(-age/p.duration));
         const radius=this.base()*p.scale*growth;
-        const x=p.x*this.w,y=p.y*this.h;
+        const driftTime=this.motion.matches?0:age;
+        const x=p.x*this.w+Math.sin(driftTime*.035+p.seed)*9,y=p.y*this.h+Math.sin(driftTime*.027+p.seed*2)*7;
+        // Broad translucent pigment blooms move independently beneath the painted details.
+        for(const mist of p.mist) {
+          const mx=x+radius*(mist.x+Math.sin(driftTime*mist.rate+mist.phase)*.12);
+          const my=y+radius*(mist.y+Math.cos(driftTime*mist.rate*.7+mist.phase)*.1);
+          const mr=radius*mist.r;
+          const fog=c.createRadialGradient(mx,my,0,mx,my,mr);
+          fog.addColorStop(0,`rgba(155,178,179,${fade*.105})`);
+          fog.addColorStop(.45,`rgba(174,190,197,${fade*.065})`);
+          fog.addColorStop(1,'rgba(190,202,207,0)');
+          c.fillStyle=fog;c.fillRect(mx-mr,my-mr,mr*2,mr*2);
+        }
         c.save();c.translate(x,y);c.rotate(p.rotation);c.scale(1,p.aspect);
         c.globalAlpha=fade;
         c.drawImage(p.texture,-radius*1.5,-radius*1.5,radius*3,radius*3);
         c.restore();
         // A single, very quiet set of painted surface ripples within the wash.
         const breathing=this.motion.matches?0:Math.sin(age*p.breathe+p.seed)*.02;
-        for(let k=0;k<p.ringCount;k++)this.ring(x-radius*.25,y+radius*.06,radius*(.25+k*.13+breathing),fade*(.21-k*.035),p.seed+k*.65,1.2+k*.7);
+        for(let k=0;k<p.ringCount;k++) {
+          const ring=p.rings[k];
+          this.ring(x-radius*.25,y+radius*.06,radius*(.22+k*.14+ring.offset+breathing),fade*(.24-k*.035),ring.seed,ring.width);
+        }
         // A few petals, loosely clustered; the rest stays empty.
         for(let k=0;k<p.petals.length;k++) {
           const petal=p.petals[k];

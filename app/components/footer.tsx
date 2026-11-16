@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import styles from "./footer.module.css";
 
 const GARDEN_LINKS = [
   { label: "Work", href: "/" },
@@ -17,12 +19,14 @@ const SAY_HI_LINKS = [
 const LAST_UPDATED = "9/25/2026";
 
 export default function Footer() {
+  const craft = usePathname() === "/fun";
+
   return (
-    <footer className="relative w-full overflow-hidden px-6 pb-9 pt-[110px] lg:px-[min(215px,15vw)]">
-      <div
+    <footer className={`relative w-full overflow-hidden px-6 pb-9 pt-[110px] lg:px-[min(215px,15vw)] ${craft ? styles.craft : ""}`}>
+      {!craft && <div
         aria-hidden
         className="pointer-events-none absolute inset-x-[-10%] bottom-0 h-[280px] bg-[#b3bfcb] blur-[48px]"
-      />
+      />}
 
       <div className="relative flex flex-col gap-16 sm:flex-row sm:items-start sm:justify-between">
         <p className="footer-tagline">Continue making for what feels right.</p>

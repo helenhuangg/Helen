@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ScrollPlayVideoProps = React.VideoHTMLAttributes<HTMLVideoElement> & {
   src?: string;
   sources?: { src: string; type: string }[];
+  playbackLabel?: string;
 };
 
 export default function ScrollPlayVideo({
@@ -12,17 +13,20 @@ export default function ScrollPlayVideo({
   sources,
   className,
   style,
+  playbackLabel,
   ...props
 }: ScrollPlayVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const inViewRef = useRef(false);
+  const manuallyPaused = useRef(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const play = () => {
-      if (!inViewRef.current) return;
+      if (!inViewRef.current || manuallyPaused.current) return;
       void video.play().catch(() => {});
     };
 
@@ -51,7 +55,7 @@ export default function ScrollPlayVideo({
     };
   }, []);
 
-  return (
+  const video = (
     <video
       ref={videoRef}
       src={sources ? undefined : src}
@@ -62,10 +66,38 @@ export default function ScrollPlayVideo({
       preload="auto"
       style={style}
       {...props}
+      controls={playbackLabel ? false : props.controls}
+      onPlay={(event) => {
+        if (playbackLabel) setPlaying(true);
+        props.onPlay?.(event);
+      }}
+      onPause={(event) => {
+        if (playbackLabel) setPlaying(false);
+        props.onPause?.(event);
+      }}
     >
       {sources?.map((source) => (
         <source key={source.src} src={source.src} type={source.type} />
       ))}
     </video>
+  );
+
+  if (!playbackLabel) return video;
+
+  return (
+    <button
+      type="button"
+      className="block w-full cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-4"
+      aria-label={`${playing ? "Pause" : "Play"} ${playbackLabel}`}
+      onClick={() => {
+        const element = videoRef.current;
+        if (!element) return;
+        manuallyPaused.current = !element.paused;
+        if (manuallyPaused.current) element.pause();
+        else void element.play().catch(() => {});
+      }}
+    >
+      {video}
+    </button>
   );
 }

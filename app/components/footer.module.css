@@ -1,0 +1,6 @@
+.craft {
+  background-color: #323c45;
+  --color-secondary: #bfccd7;
+}
+
+.craft :global(.footer-heading) { opacity: 1; }

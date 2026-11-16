@@ -1,448 +1,152 @@
 "use client";
-import { useRef } from "react";
-import WorkNav from "@/app/components/WorkNav";
-import WorkHeader from "@/app/components/WorkHeader";
-import WorkSection from "@/app/components/WorkSection";
-import WorkInfoBar from "@/app/components/WorkInfoBar";
-import WorkMediaSlot, {
-  type WorkMediaSlotImage,
-} from "@/app/components/WorkMediaSlot";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+
+import { useEffect, useState, useRef, type ReactNode } from "react";
+import { BookOpen, ListChecks, Route, type LucideIcon } from "lucide-react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import styles from "../case-study.module.css";
+import CaseStudyLayout from "../CaseStudyLayout";
 
-gsap.registerPlugin(ScrollTrigger);
+const sections = ["TL;DR", "Overview", "The Challenge", "Design Principles", "Process", "Outcome", "Impact", "Reflection"];
+const ids = ["summary", "overview", "challenge", "goal", "process", "outcome", "impact", "reflection"];
+const outlineSections = sections.map((label, index) => ({ id: ids[index], label }));
+const direction = [
+  { src: "yhack-ds-wireframe-sketch.png", label: "Sketch", alt: "Initial landing page sketch" },
+  { src: "yhack-ds-color-palette.png", label: "Color", alt: "YHack color palette" },
+  { src: "yhack-ds-typography.png", label: "Type", alt: "Typography and YHack wordmark" },
+];
+const development = [
+  { src: "yhack-wireframes-section-sketches.png", label: "Sketch V2", alt: "Section layout sketches" },
+  { src: "yhack-wireframes-hero-iterations.png", label: "Sketch V2", alt: "Hero layout iterations" },
+  { src: "yhack-iterations-part-1.png", label: "V1", alt: "Early YHack concepts, typography, and grayscale layout on the Figma canvas" },
+  { src: "yhack-wireframes-figma-canvas.png", label: "V2", alt: "Original Figma canvas of YHack sketches and layout iterations" },
+  { src: "yhack-iterations-part-2.png", label: "V3", alt: "Later YHack layout and visual iterations on the Figma canvas" },
+  { src: "yhack-iteration-v5.png", label: "V4", alt: "YHack V4 Figma canvas with the full-page design, cloud layers, floating islands, envelopes, and postcard FAQ" },
+];
+const illustrations = ["floating-islands", "tracks-stamps", "envelopes", "wordmark", "sterling-library", "clouds"].map(name => ({
+  src: `yhack-asset-${name}.png`,
+  label: name.replaceAll("-", " "),
+  alt: `YHack ${name.replaceAll("-", " ")}`,
+}));
 
-const YHACK_MOCKUP_SECTION_ORDER = [
-  "Home",
-  "About",
-  "Tracks",
-  "FAQ",
-  "Footer",
-] as const;
+function Gallery({ images }: { images: typeof direction }) {
+  const [filter, setFilter] = useState("All");
+  useEffect(() => { const frame = requestAnimationFrame(() => ScrollTrigger.refresh()); return () => cancelAnimationFrame(frame); }, [filter]);
+  return <div className={`${styles.gallery} ${filter === "All" ? styles.galleryAll : ""}`}>
+    <div className={styles.filters} aria-label="Filter project images">
+      {["All", ...new Set(images.map(image => image.label))].map(label => <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}>{label}</button>)}
+    </div>
+    <div className={styles.images}>
+      {images.filter(image => filter === "All" || image.label === filter).map(image => (
+        <img key={image.src} src={`/images/${image.src}`} alt={image.alt} onLoad={() => ScrollTrigger.refresh()} />
+      ))}
+    </div>
+  </div>;
+}
 
-const YHACK_FINAL_MOCKUP_GIFS: WorkMediaSlotImage[] = [1, 2, 3, 4, 5].map(
-  (n, i) => ({
-    src: `/gifs/${encodeURIComponent(`Convert to GIF project (${n}).gif`)}`,
-    alt: `YHack ${YHACK_MOCKUP_SECTION_ORDER[i]} section mockup`,
-    sectionLabel: YHACK_MOCKUP_SECTION_ORDER[i],
-  }),
-);
+function Section({ id, label, title, children }: { id: string; label: string; title: string; children: ReactNode }) {
+  return <section id={id} className={styles.section}>
+    <div className={styles.sectionHeading}><p className={styles.label}>{label}</p><h2>{title}</h2></div>
+    {children}
+  </section>;
+}
 
 export default function YHack() {
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const sections = gsap.utils.toArray<HTMLElement>(".work-section");
-      const isMobile = window.matchMedia("(max-width: 1023px)").matches;
-
-      if (isMobile) {
-        gsap.set(sections, { opacity: 1, y: 0 });
-      } else {
-        sections.forEach((section) => {
-          gsap.from(section, {
-            opacity: 0,
-            y: 50,
-            duration: 0.7,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          });
-        });
-      }
-    },
-    { scope: contentRef },
-  );
-
+  const summaryEndRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = summaryEndRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { el.dataset.revealed = "true"; observer.disconnect(); }
+    }, { threshold: .6 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   return (
-    <div className="w-full pt-[5vh] lg:pt-[calc(5rem+5vh)]">
-      <WorkNav
-        sections={[
-          { id: "overview", label: "Overview" },
-          { id: "role-breakdown", label: "Role Breakdown" },
-          { id: "goals", label: "Goals" },
-          { id: "ideation", label: "Ideation" },
-          { id: "mid-fidelity", label: "Mid-Fidelity" },
-          { id: "design-challenge", label: "Design Challenge" },
-          { id: "final-design", label: "Final Design" },
-          { id: "reflection", label: "Reflection" },
-        ]}
-      />
-
-      <div
-        ref={contentRef}
-        className="flex flex-col gap-[10px] items-start p-[10px] px-6 lg:pl-[calc(6vw+10rem+0.75rem)] lg:pr-[6vw]"
-      >
-        <WorkHeader
-          subtitle="YHACK SPRING 2026"
-          title="Designing a Hackathon Site Worth Falling For"
-          image="/images/yhack2.png"
-          alt="YHack"
-        />
-
-        <WorkInfoBar
-          items={[
-            { label: "ROLE", value: "Lead Designer" },
-            { label: "TIMELINE", value: "4 weeks" },
-            { label: "TEAM", value: "Mandy Chen\nRohan Phanse" },
-            {
-              label: "RESPONSIBILITIES",
-              value: "Branding\nUI/UX\nIllustrations",
-            },
-          ]}
-        />
-
-        <WorkSection id="overview" label="OVERVIEW" headline="What is YHack?">
-          <p>
-            I was introduced by a friend (Grady) to help design the main YHack
-            Spring 2026 website. YHack is Yale&apos;s flagship hackathon,
-            bringing in over 600 college builders for a 24 hours of hacking. 5
-            weeks prior to the launch date, the site was still blank but there
-            was a theme and it was{" "}
-            <span style={{ color: "#f23232" }}>Love</span>.
-          </p>
-        </WorkSection>
-
-        <WorkSection
-          id="role-breakdown"
-          label="ROLE BREAKDOWN"
-          headline="A Brief Rundown of My Tasks"
-        >
-          <div className="flex flex-col gap-4">
-            <p>
-              This was my first &quot;big&quot; project and I was handling most
-              of the design work. Thankfully, another designer left me a color
-              palette and logo to set the overall vibe of the site. It was
-              definitely a{" "}
-              <span style={{ color: "var(--color-primary)" }}>
-                learning curve
-              </span>{" "}
-              as I didn&apos;t have much experience designing websites let alone
-              hackathon ones. So before I even started, I researched multiple
-              different hackathons (eg. TreeHacks, HackMIT, HackPrinceton
-              etc...). Looking back, if I had the experience, I definitely
-              wouldn&apos;t of taken as long as I did.
-            </p>
-            <div className="flex flex-col gap-2">
-              <h5 className="subheadline">Team Members:</h5>
-              <div className="flex flex-col gap-1">
-                <p>
-                  <span
-                    style={{ color: "var(--color-primary)", fontWeight: 500 }}
-                  >
-                    Mandy Chen{" "}
-                  </span>
-                  designed four Handsome Dan variations, MLH graphics,
-                  merchandise, created the Handsome Dan logo, established color
-                  palette, and set overall tone with her initial landing page
-                  section idea.
-                </p>
-                <p>
-                  <span
-                    style={{ color: "var(--color-primary)", fontWeight: 500 }}
-                  >
-                    Rohan Phanse{" "}
-                  </span>
-                  was the lead developer and main point of contact for asset
-                  handoffs. He also created the Harkness Tower assets and made
-                  multiple design iterations on the development side to bring
-                  the site to life while making it functional.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <h5 className="subheadline">My Role:</h5>
-              <p>
-                I led the{" "}
-                <span style={{ color: "var(--color-primary)" }}>
-                  end-to-end design
-                </span>{" "}
-                of the site, from lo-fi sketches to high fidelity wireframes. I
-                was responsible for the full page layout, content hierarchy,
-                scroll interactions, and custom assets including: clouds,
-                floating islands, wax stamps, envelopes, postcards, YHack
-                wordmark, and the Sterling Library illustration.
-              </p>
-            </div>
-          </div>
-        </WorkSection>
-
-        <WorkSection
-          id="goals"
-          label="GOALS"
-          headline="What am I Trying to Achieve in Designing for YHack?"
-        >
-          <p>
-            As the theme was already set and key branding decisions met by
-            Mandy, I focused my goals on translating that creative direction
-            into a site thats: cohesive, immersive, and exciting to scroll
-            through!
-          </p>
-          <div className="flex flex-col lg:flex-row gap-4 w-full">
-            {[
-              {
-                title: "1.) Create an immersive scroll experience",
-                desc: "Site should feel like a journey, not just a page. Every Section should flow naturally onto the other.",
-              },
-              {
-                title: "2.) Tell a story visually",
-                desc: "Rather than leading with logistics, site should lead with personality. The theme of love needed to feel well-crafted and not gimmicky.",
-              },
-              {
-                title: "3.) Keep information clear & accessible",
-                desc: "As playful as the design was, hackers need to be able to navigate quickly to find what they are looking for.",
-              },
-            ].map((goal) => (
-              <div key={goal.title} className="flex-1 flex flex-col gap-1">
-                <p
-                  className="subheadline2"
-                  style={{ color: "var(--color-primary)" }}
-                >
-                  {goal.title}
-                </p>
-                <p className="text-[14px] tracking-[-0.42px]">{goal.desc}</p>
-              </div>
+    <CaseStudyLayout cover={{ src: "/images/yhack2.png", alt: "YHack 2026 illustrated website" }} sections={outlineSections}>
+        <h1>YHack 2026: Designing a Hackathon Site Full of Love</h1>
+        <p className={styles.deck}>Drawing ~800 registrations, a 3.2× jump from Fall 2024’s reported turnout, with a sky-to-ground scroll that guided visitors from the hero to Apply.</p>
+        <dl className={styles.facts}>
+          {[["Role", "Lead Product Designer"], ["Timeline", "Dec 2025 – Feb 2026"], ["Software", "Figma, Adobe Illustrator, Procreate"], ["Team", "Mandy Chen (graphics support), Rohan Phanse (development)"]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
+        </dl>
+        <section id="summary" className={styles.summary}>
+          <p className={styles.label}>TL;DR</p>
+          <p>YHack is Yale’s flagship hackathon, where students from across the country build products for social good. Over five weeks, I designed the 2026 event website from scratch, including a reusable design system and custom illustrations. <span ref={summaryEndRef} className={styles.summaryEnd}>The event drew ~800 registrations, about 3.2× the reported Fall 2024 in-person turnout.</span></p>
+          <a className={styles.live} href="https://yhack.org" target="_blank" rel="noopener noreferrer">Visit the live site ↗</a>
+        </section>
+        <Section id="overview" label="Overview" title="An Invitation to Hack">
+          <p>As the only product designer on YHack 2026, I took the main website from blank slate to launch. Building on the teaser’s visual tone, I defined what the site says, how people move through it, and how the Love theme shows up in its illustrations, interactions, and experiences.</p>
+          <div><h3>This included:</h3><ul className={styles.tasks}>
+            <li><strong>Set the design direction.</strong> I researched how TreeHacks, HackMIT, and Hack the North defined their concepts, visual language, and interactions.</li>
+            <li><strong>Designed the full page.</strong> I decided what information to prioritize, how the page should unfold as visitors scrolled, and how the hero, About, Sponsors, FAQ, and footer would fit together.</li>
+            <li><strong>Built the design system.</strong> I created reusable components, including buttons, input fields, and accordions, and defined how they would look and behave across the site.</li>
+            <li><strong>Created the site’s illustrations and visual assets.</strong> I designed the clouds, floating islands, wax stamps, envelopes, postcard, YHack wordmark, and Sterling Library illustration.</li>
+          </ul></div>
+        </Section>
+        <Section id="challenge" label="The Challenge" title="Bringing YHack Back">
+          <p>YHack skipped 2025, so the 2026 site had to reintroduce it to students who hadn’t seen it before. The Love theme called for personality, hackers needed a quick path to apply, and we had only a few weeks.</p>
+          <blockquote><img src="/images/case-study/quote-rule.svg" alt="" />How might we bring YHack back with a story that draws people in without hiding what they came for?</blockquote>
+        </Section>
+        <Section id="goal" label="Design Principles" title="Story First, Clarity Always">
+          <p>Three rules guided every design decision.</p>
+          <ol className={styles.principles}>
+            {([
+              [Route, "Create an immersive scroll experience", "Make the site feel like a journey, with each section flowing into the next."],
+              [BookOpen, "Tell a story visually", "Lead with personality so the Love theme feels crafted."],
+              [ListChecks, "Keep information clear and accessible", "Keep it playful while helping hackers find what they need quickly."],
+            ] satisfies [LucideIcon, string, string][]).map(([Icon, title, description]) => (
+              <li key={title}>
+                <Icon className={styles.principleIcon} size={44} strokeWidth={1.25} aria-hidden="true" />
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </li>
             ))}
-          </div>
-        </WorkSection>
-
-        <WorkSection id="ideation" label="IDEATION" headline="Starting Big">
-          <p>
-            I met with Mandy and Zoya on Zoom to discuss logistics. I was
-            originally only doing the colored version of the website but I ended
-            up brainstorming and drafting a sketch as well as making the
-            wordmark on top.
-          </p>
-          <div className="flex flex-col lg:flex-row gap-4 w-full">
+          </ol>
+        </Section>
+        <Section id="process" label="Process" title="Starting Big">
+          <h3>Establishing the Visual Direction</h3>
+          <p>I met with two designers to align on the graphics. We decided on three features:</p>
+          <ul>
+            <li><strong>A sky-to-ground scroll narrative.</strong> The page descends from clouds to a lush landscape.</li>
+            <li><strong>Layered parallax animation.</strong> Clouds and islands move at different speeds to create depth.</li>
+            <li><strong>Romantic micro-moments.</strong> Envelopes, wax seals, and postcards reinforce the theme.</li>
+          </ul>
+          <p>From there, I sketched my initial vision, finalized the typography and wordmark, and built the design system.</p>
+          <Gallery images={direction} />
+          <h3>Nailing Down the Content</h3>
+          <p>With the “how might we” question in mind, I moved into mid-fidelity to lock in the content hierarchy, scroll interactions, and assets we’d need.</p>
+          <Gallery images={development} />
+          <h3>Bringing It to Life</h3>
+          <p>I replaced the wireframe placeholders with custom clouds, wax stamps, envelopes, postcards, and a Sterling Memorial Library illustration. I worked with Mandy on the Handsome Dan art, then handed off the designs and assets to Rohan to build.</p>
+          <Gallery images={illustrations} />
+        </Section>
+        <Section id="outcome" label="Outcome" title="Design with Love">
+          <p>The experiences I worked on include:</p>
+          {["Hero", "About", "Tracks", "FAQ", "Footer"].map((label, index) => <figure className={styles.mockup} key={label}><figcaption>{label}</figcaption><img src={`/gifs/${encodeURIComponent(`Convert to GIF project (${index + 1}).gif`)}`} alt={`YHack ${label} animated design`} onLoad={() => ScrollTrigger.refresh()} /></figure>)}
+        </Section>
+        <Section id="impact" label="Impact" title="From Sketches to Launch">
+          <dl className={styles.metrics}>
             {[
-              {
-                title: "A sky-to-ground scroll narrative",
-                desc: 'the page would visually "descend" from clouds and sky at the top to a grounded, lush environment below, following Handsome Dan on his journey',
-              },
-              {
-                title: "Layered parallax animations",
-                desc: "clouds, floating islands, and illustrated elements would shift at different speeds as the user scrolls, creating depth and a sense of movement",
-              },
-              {
-                title: "Romantic micro-moments",
-                desc: "envelopes that open, wax seals, postcards, and love letters woven into the UI to reinforce the Valentine\u2019s theme without being heavy-handed",
-              },
-            ].map((idea) => (
-              <div key={idea.title} className="flex-1 flex flex-col gap-1">
-                <p
-                  className="subheadline2"
-                  style={{ color: "var(--color-primary)" }}
-                >
-                  {idea.title}
-                </p>
-                <p className="text-[14px] tracking-[-0.42px]">{idea.desc}</p>
-              </div>
+              ["10+", "Full-page design iterations"],
+              ["~800", "Registrations"],
+              ["3.2×", "Fall 2024 reported turnout"],
+            ].map(([number, label]) => (
+              <div key={label}><dt>{label}</dt><dd>{number}</dd></div>
             ))}
+          </dl>
+          <p>About 800 people registered for YHack 2026, roughly 3.2× the 250 students that <a className="underline underline-offset-2" href="https://yaledailynews.com/articles/yhack-brings-hundreds-of-hackers-to-campus-for-24-hours-of-innovation-2">Yale Daily News</a> reported attending in person in Fall 2024. After applying, one hacker messaged the team to say how smooth the site felt and singled out my Yale illustration at the bottom.</p>
+          <div className={styles.comments}>
+            <figure>
+              <img src="/images/yhack-comment-applicant.png" alt="Applicant message praising the YHack website and Yale illustration" onLoad={() => ScrollTrigger.refresh()} />
+            </figure>
+            <figure>
+              <img src="/images/yhack-comment-figma.png" alt="Figma comment on Iteration V3 saying w work" onLoad={() => ScrollTrigger.refresh()} />
+            </figure>
           </div>
-          <p>
-            With a rough sketch and some thought, I finalized the typography,
-            wordmark, and developed a design system for the site. I picked one
-            of the two color palettes provided by Mandy. There are still hints
-            of my initial sketch within the final deliverable, however,
-            it&apos;s still completely different.
-          </p>
-          <WorkMediaSlot
-            label="Design System + Rough draft"
-            images={[
-              {
-                src: "/images/yhack-ds-typography.png",
-                alt: "YHack typography, text sample, and wordmark",
-              },
-              {
-                src: "/images/yhack-ds-color-palette.png",
-                alt: "YHack color palette",
-              },
-              {
-                src: "/images/yhack-ds-wireframe-sketch.png",
-                alt: "YHack hand-drawn landing page wireframe",
-              },
-            ]}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="mid-fidelity"
-          label="MID-FIDELITY"
-          headline="Nailing Down the Content"
-        >
-          <p>
-            Using the brainstorm, I moved into mid-fidelity with the question:
-          </p>
-          <div className="flex gap-5 items-center px-1 w-full">
-            <div
-              className="w-[2px] self-stretch"
-              style={{ backgroundColor: "var(--color-primary)" }}
-            />
-            <p
-              className="flex-1 text-[20px] tracking-[-0.6px]"
-              style={{
-                fontFamily: "var(--font-eb-garamond)",
-                fontStyle: "italic",
-                color: "var(--color-primary)",
-              }}
-            >
-              How can I design a site that is both immersive and cohesive while
-              staying executable in the time frame and communicating the content
-              effectively?
-            </p>
-          </div>
-          <p>
-            This stage was all about structure, locking into content hierarchy,
-            determining scroll interactions, and identifying required assets.
-          </p>
-          <WorkMediaSlot
-            label="KEY FEATURES + WIREFRAMES"
-            images={[
-              {
-                src: "/images/yhack-wireframes-figma-canvas.png",
-                alt: "Figma workspace: wireframe iterations, color mockups, sketch, and mobile artboards",
-                caption:
-                  "Peep all my sketches and drafts! I went through too many iterations…",
-              },
-              {
-                src: "/images/yhack-wireframes-hero-iterations.png",
-                alt: "Hero wireframe options, must-haves, and apply CTA flow sketches",
-              },
-              {
-                src: "/images/yhack-wireframes-section-sketches.png",
-                alt: "Section sketches: About, Sponsors, Tracks, and layout notes",
-              },
-            ]}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="design-challenge"
-          label="DESIGN CHALLENGE"
-          headline="Defining and Completing Graphic Asset Requirements"
-        >
-          <p>
-            Even though most of the wireframes were set, there were placeholders
-            everywhere. We needed a lot of custom assets and I never made any...
-            which is why I think it took really long because I somehow made it.
-            I worked closely with Mandy to brief, iterate, and refine assets
-            like the cupid Handsome Dan and environmental assets while I tackled
-            assets like clouds, wax stamps, envelopes, postcards, and the
-            Sterling Memorial Library.
-          </p>
-          <WorkMediaSlot
-            label="ASSETS I MADE"
-            images={[
-              {
-                src: "/images/yhack-asset-floating-islands.png",
-                alt: "Floating island illustrations",
-                caption: "floating islands",
-              },
-              {
-                src: "/images/yhack-asset-tracks-stamps.png",
-                alt: "Track icons as heart-shaped wax seals",
-                caption: "tracks as heart-shaped stamps",
-              },
-              {
-                src: "/images/yhack-asset-envelopes.png",
-                alt: "Blue envelope UI components and states",
-                caption: "envelopes",
-              },
-              {
-                src: "/images/yhack-asset-wordmark.png",
-                alt: "YHack wordmark",
-                caption: "yhack wordmark",
-              },
-              {
-                src: "/images/yhack-asset-sterling-library.png",
-                alt: "Sterling Memorial Library illustration",
-                caption: "sterling memorial library",
-              },
-              {
-                src: "/images/yhack-asset-clouds.png",
-                alt: "Cloud illustrations",
-                caption: "clouds",
-              },
-            ]}
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="final-design"
-          label="FINAL DESIGN"
-          headline="A Website Designed with Love"
-        >
-          <p>Here is a full list of features I designed!</p>
-          <WorkMediaSlot
-            label="MOCKUPS + DESIGN DECISIONS"
-            images={YHACK_FINAL_MOCKUP_GIFS}
-            imagesLayout="stack"
-            footer={
-              <p
-                className="text-[12px] tracking-[-0.6px] uppercase"
-                style={{
-                  fontFamily: "var(--font-dm-mono)",
-                  color: "var(--color-accent)",
-                }}
-              >
-                View live site @{" "}
-                <a
-                  href="https://yhack.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-[3px] transition-opacity hover:opacity-80"
-                  style={{ color: "var(--color-accent)" }}
-                >
-                  yhack.org
-                </a>
-              </p>
-            }
-          />
-        </WorkSection>
-
-        <WorkSection
-          id="reflection"
-          label="REFLECTION"
-          headline="Challenges &amp; Outcomes"
-        >
-          <div className="flex gap-6 w-full">
-            <div className="flex-1 flex flex-col gap-1">
-              <p
-                className="subheadline2"
-                style={{ color: "var(--color-primary)" }}
-              >
-                Navigating an Experimental Process
-              </p>
-              <p className="text-[14px] tracking-[-0.42px]">
-                So much of this process was experimental, I found myself putting
-                in more time and effort than I anticipated, and sometimes on the
-                incorrect things. This was largely due to my inexperience but it
-                taught me to iterate with purpose. This project went through
-                countless revisions and every single one of them were shaped by
-                valuable feedback from both Mandy and Rohan.
-              </p>
-            </div>
-            <div className="flex-1 flex flex-col gap-1">
-              <p
-                className="subheadline2"
-                style={{ color: "var(--color-primary)" }}
-              >
-                Learning What It Truly Means to Work in a Cross-Functional Team
-              </p>
-              <p className="text-[14px] tracking-[-0.42px]">
-                Designing for YHack gave me the chance to work with other people
-                and get their perspectives. It made me realize that it&apos;s
-                not just about doing your part but also staying align,
-                communicative, and trusting the people you are working with.
-              </p>
-            </div>
-          </div>
-        </WorkSection>
-      </div>
-    </div>
+        </Section>
+        <Section id="reflection" label="Reflection" title="Challenges & Outcomes">
+          <p>So much of this process was experimental, I found myself putting in more time and effort than I anticipated, and sometimes on the incorrect things. This was largely due to my inexperience but it taught me to iterate with purpose. This project went through countless revisions and every single one of them was shaped by valuable feedback from both Mandy and Rohan.</p>
+          <p>Designing for YHack gave me the chance to work with other people and get their perspectives. It made me realize that it’s not just about doing your part but also staying aligned, communicative, and trusting the people you are working with.</p>
+        </Section>
+    </CaseStudyLayout>
   );
 }

@@ -102,13 +102,13 @@
   color: var(--color-primary);
 }
 
-#reflection p {
+.work-section#reflection p {
   font-family: var(--font-louize);
   letter-spacing: -0.2px;
   line-height: 140%;
 }
 
-#reflection .subheadline2 {
+.work-section#reflection .subheadline2 {
   font-family: var(--font-Alte-Haas-Grotesk);
   letter-spacing: -0.8px;
   line-height: normal;
@@ -472,11 +472,11 @@
 .about-heading {
   color: var(--color-primary);
   font-family: var(--font-eb-garamond);
-  font-size: clamp(2.25rem, 3.3vw, 3rem);
+  font-size: clamp(36px, 4vw, 48px);
   font-style: normal;
   font-weight: 400;
   line-height: 1.14;
-  letter-spacing: -2.4px;
+  letter-spacing: -.05em;
   font-feature-settings:
     "swsh" 1,
     "dlig" 1;
@@ -485,11 +485,11 @@
 .about-lede {
   color: var(--color-secondary);
   font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: 17.803px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.5341px;
+  line-height: 1.45;
+  letter-spacing: -0.28px;
 }
 
 /* The strip height drives every photo's width, so the row keeps the design's
@@ -503,12 +503,12 @@
 }
 
 .about-photo-caption {
-  color: rgb(107 117 127 / 0.75);
+  color: var(--color-secondary);
   font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.45;
   letter-spacing: -0.48px;
   transition:
     left 0.3s ease,
@@ -526,23 +526,23 @@
 
 .about-body,
 .about-note {
-  color: var(--color-secondary);
-  font-family: var(--font-eb-garamond);
-  font-size: 17.803px;
+  color: var(--color-primary);
+  font-family: var(--font-Alte-Haas-Grotesk);
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.5341px;
+  line-height: 1.45;
+  letter-spacing: -0.28px;
 }
 
 .about-org-name {
   color: var(--color-primary);
   font-family: var(--font-eb-garamond);
-  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 1.14;
-  letter-spacing: -1.4px;
+  letter-spacing: -.04em;
   font-feature-settings:
     "swsh" 1,
     "dlig" 1;
@@ -554,17 +554,17 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.45;
   letter-spacing: -0.42px;
 }
 
 .about-org-dates {
-  color: rgb(107 117 127 / 0.75);
-  font-family: var(--font-Alte-Haas-Grotesk);
-  font-size: 14px;
+  color: var(--color-secondary);
+  font-family: var(--font-dm-mono);
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.45;
   letter-spacing: -0.42px;
 }
 
@@ -692,4 +692,26 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+}
+
+/* Give work-page navigation a consistent contrast over hero artwork. */
+header[data-adaptive-contrast="true"] {
+  background-color: rgb(247 247 247 / 95%);
+  backdrop-filter: blur(12px);
+}
+
+header[data-adaptive-contrast="true"] a,
+header[data-adaptive-contrast="true"] button {
+  color: var(--color-primary);
+}
+
+header[data-adaptive-contrast="true"] a[href="/"] img {
+  filter: brightness(.65);
+}
+
+header[data-craft="true"] {
+  --color-secondary: #bfccd7;
+  --color-highlight: #41505d;
+  --color-primary: #f7f7f7;
+  background-color: rgb(50 60 69 / 95%);
 }
