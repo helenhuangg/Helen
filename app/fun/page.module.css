@@ -69,6 +69,7 @@
 }
 
 .card {
+  position: relative;
   flex: 0 0 auto;
   min-width: 0;
   scroll-snap-align: start;
@@ -77,7 +78,13 @@
 .row[data-wide="false"] .card { min-width: 180px; }
 .row[data-wide="false"] .media img { margin-inline: auto; }
 
-.cardLink { display: block; color: inherit; text-decoration: none; }
+.cardButton {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  cursor: pointer;
+}
+.card:has(.cardButton:focus-visible) .media { outline: 2px solid var(--craft-muted); }
 .media { height: var(--preview-height); background: #41505d; }
 .media[data-placeholder="true"] { aspect-ratio: 16 / 9; }
 .media img, .media video {
@@ -88,7 +95,7 @@
   object-fit: contain;
 }
 .media video { aspect-ratio: auto 16 / 9; }
-.cardLink:hover .media { opacity: .84; }
+
 
 .caption {
   display: grid;
@@ -119,14 +126,15 @@
 
 .panel {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 1fr;
   opacity: 1;
   transition: grid-template-rows 340ms ease, opacity 240ms ease;
 }
 .panel[data-open="false"] { grid-template-rows: 0fr; opacity: 0; }
-.panelInner { min-height: 0; overflow: hidden; }
+.panelInner { min-width: 0; min-height: 0; overflow: hidden; }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (min-width: 768px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
   .intro, .collection { animation: craft-enter 650ms cubic-bezier(.22, 1, .36, 1) both; }
   .collection { animation-delay: 100ms; }
   .collection + .collection { animation-delay: 180ms; }
@@ -139,3 +147,179 @@
 @media (prefers-reduced-motion: reduce) {
   .panel, .toggle { transition: none; }
 }
+
+
+@media (max-width: 767px) {
+  .row .card { flex: 0 0 min(78vw, 360px); }
+  .row .media { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .row .media img, .row .media video { width: 100%; height: 100%; }
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: clamp(12px, 4vw, 48px);
+  background: transparent;
+  color: var(--color-primary);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.dialog[open] { display: grid; justify-items: center; align-items: center; }
+.dialog::backdrop { background: rgb(28 38 48 / 60%); backdrop-filter: blur(8px); }
+.dialogFrame { display: flex; flex-direction: column; width: min(100%, 900px); min-height: 0; max-height: 100%; gap: 14px; pointer-events: none; }
+.dialogSheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #b3bfcb;
+  border-radius: 12px;
+  background: #f7f7f7;
+  box-shadow: 0 16px 60px rgb(15 25 35 / 20%);
+  pointer-events: auto;
+}
+
+.dialogScroll { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.dialogMedia {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  padding: clamp(8px, 2vw, 24px);
+  background: #e1e7ed;
+}
+.dialogMedia img, .dialogMedia video {
+  width: 100%;
+  height: auto;
+  max-height: 58vh;
+  max-height: 58dvh;
+  object-fit: contain;
+}
+.dialogMedia video { aspect-ratio: 16 / 9; }
+
+.dialogDetails { padding: clamp(16px, 3vw, 32px); }
+.dialogHeading { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.dialogTag { padding: 4px 8px; border-radius: 4px; background: #dce3eb; font: 12px/1.4 var(--font-dm-mono); text-transform: uppercase; }
+.dialogDetails h2 {
+  font: 400 clamp(28px, 3.5vw, 44px)/1.05 var(--font-eb-garamond);
+  letter-spacing: -.04em;
+}
+.dialogDescription { margin-top: 10px; font-size: 14px; line-height: 1.5; }
+.dialogTools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; font-size: 14px; line-height: 1.5; }
+.dialogTools dt { font-weight: 700; }
+.dialogTools dd { color: var(--color-secondary); }
+.dialogLink {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 8px 21px;
+  border: 1px dashed currentColor;
+  border-radius: 8px;
+  font: 14px var(--font-dm-mono);
+  text-transform: uppercase;
+  transition: background .2s, color .2s;
+}
+.dialogLink:hover { border-color: transparent; background: var(--color-primary); color: var(--color-background); }
+
+.dialogClose, .dialogPager button, .dialogPager > span {
+  display: grid;
+  min-height: 40px;
+  min-width: 40px;
+  place-items: center;
+  border-radius: 4px;
+  font: 12px var(--font-dm-mono);
+}
+.dialogClose, .dialogPager button { cursor: pointer; }
+.dialogClose {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  background: rgb(247 247 247 / 65%);
+  backdrop-filter: blur(6px);
+}
+.dialogClose:hover, .dialogClose:focus-visible { background: rgb(247 247 247 / 92%); }
+
+.afterEffectsBadge {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #00005b;
+  color: #b5b5ff;
+  font-size: 15px;
+  font-weight: 700;
+}
+.dialogPager { display: flex; flex: 0 0 auto; justify-content: center; gap: 8px; }
+.dialogPager button, .dialogPager > span { padding: 0 12px; background: #323c45; color: #f7f7f7; pointer-events: auto; }
+.dialogPager button:hover { background: #4b5f70; }
+.dialog :focus-visible { outline: 2px solid #778ba4; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .dialog[open] .dialogFrame { animation: craft-enter 280ms ease-out both; }
+}
+
+.designCarousel { background: #e1e7ed; }
+.designStage {
+  display: grid;
+  align-items: center;
+}
+.designStage[data-multiple="true"] {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  padding-inline: clamp(6px, 2vw, 20px);
+}
+.designStage button {
+  display: grid;
+  place-items: center;
+  width: clamp(32px, 5vw, 40px);
+  height: 44px;
+  border-radius: 4px;
+  background: #f7f7f7;
+  cursor: pointer;
+}
+.designStage button:hover { background: #d2dce6; }
+.designCounter {
+  padding: 0 12px 12px;
+  text-align: center;
+  font: 12px/1.4 var(--font-dm-mono);
+}
+
+.cardSlideshow {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1;
+}
+.media .cardSlideshow img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 650ms ease;
+}
+.media .cardSlideshow img[data-active="true"] { opacity: 1; }
+@media (max-width: 767px) {
+  .cardSlideshow { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .media .cardSlideshow img { transition: none; }
+}
+
+.sitePreview {
+  display: block;
+  width: 100%;
+  height: clamp(240px, 58dvh, 580px);
+  border: 0;
+  border-radius: 4px;
+  background: #dcbcc0;
+}
+
+.designStage .dialogMedia video { aspect-ratio: auto; }

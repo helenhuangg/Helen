@@ -108,7 +108,13 @@
 .gallery .filters button[aria-pressed="true"], .gallery .filters button:hover { background: var(--color-primary); color: var(--color-background); }
 .back, .toTop { font: 400 12px/1 var(--font-dm-mono); text-transform: uppercase; letter-spacing: .04em; padding: 8px 12px; border-radius: 2px; background: var(--color-highlight); color: var(--color-primary); transition: background .3s, opacity .3s; }
 .back { background: transparent; color: var(--color-secondary); }
-.back:is(:hover, :focus-visible) { background: var(--color-highlight); color: var(--color-primary); }
+.back:focus-visible { background: var(--color-highlight); color: var(--color-primary); }
+@media (hover: hover) {
+  .back:hover { background: var(--color-highlight); color: var(--color-primary); }
+}
+@media (max-width: 767px) {
+  .mobileSidebar .back { padding-inline: 8px; }
+}
 .toTop:hover { background: #c8d2dd; }
 .toTop { position: fixed; right: 24px; bottom: 24px; z-index: 10001; display: inline-flex; align-items: center; gap: 6px; border: 0; cursor: pointer; opacity: 0; pointer-events: none; }
 .toTop[data-visible="true"] { opacity: 1; pointer-events: auto; }

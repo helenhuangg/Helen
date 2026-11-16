@@ -64,7 +64,6 @@ export default function YHack() {
   return (
     <CaseStudyLayout cover={{ src: "/images/yhack2.png", alt: "YHack 2026 illustrated website" }} sections={outlineSections}>
         <h1>YHack 2026: Designing a Hackathon Site Full of Love</h1>
-        <p className={styles.deck}>Drawing ~800 registrations, a 3.2× jump from Fall 2024’s reported turnout, with a sky-to-ground scroll that guided visitors from the hero to Apply.</p>
         <dl className={styles.facts}>
           {[["Role", "Lead Product Designer"], ["Timeline", "Dec 2025 – Feb 2026"], ["Software", "Figma, Adobe Illustrator, Procreate"], ["Team", "Mandy Chen (graphics support), Rohan Phanse (development)"]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
         </dl>

@@ -43,7 +43,13 @@
 .sidebar nav { margin-top: 36px; display: flex; flex-direction: column; gap: 5px; font-size: 12px; }
 .mobileSidebar { display: none; }
 .back { display: inline-flex; align-items: center; gap: 8px; font: 400 12px/1 var(--font-dm-mono); text-transform: uppercase; letter-spacing: .04em; padding: 8px 12px; border-radius: 2px; background: transparent; color: var(--color-secondary); transition: background .3s, color .3s; }
-.back:is(:hover, :focus-visible) { background: var(--color-highlight); color: var(--color-primary); }
+.back:focus-visible { background: var(--color-highlight); color: var(--color-primary); }
+@media (hover: hover) {
+  .back:hover { background: var(--color-highlight); color: var(--color-primary); }
+}
+@media (max-width: 767px) {
+  .mobileSidebar .back { padding-inline: 8px; }
+}
 .sidebar a:hover, .sidebar a[aria-current] { color: var(--color-primary); text-decoration: none; }
 .sidebar nav a { position: relative; display: inline-flex; align-items: center; }
 .sidebar nav a span { transition: transform .45s cubic-bezier(.22,1,.36,1); }
