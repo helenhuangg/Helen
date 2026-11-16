@@ -230,7 +230,10 @@ export default function About() {
               <div className="flex min-w-0 items-center gap-4 sm:gap-[25px]">
                 <span
                   className="flex size-[54px] shrink-0 items-center justify-center overflow-hidden rounded-[1px]"
-                  style={{ border: "1.5px solid var(--color-highlight)" }}
+                  style={{
+                    backgroundColor: "#dce3eb",
+                    border: "1.5px solid var(--color-highlight)",
+                  }}
                 >
                   <img
                     src={org.logo}
